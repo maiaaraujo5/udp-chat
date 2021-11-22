@@ -50,9 +50,12 @@ func (r *Client) Handle() error {
 		case "/msg":
 			r.sendMessage("NEW_MESSAGE", msg)
 		case "/del":
-			r.sendMessage("DELETE_MESSAGE", msg)
+			if r.clientIsOwnerOfTheMessage(strings.TrimSpace(msg)) {
+				r.sendMessage("DELETE_MESSAGE", msg)
+			}
 		case "/quit":
 			r.sendMessage("DISCONNECT", "Bye")
+
 		}
 	}
 }
@@ -111,6 +114,16 @@ func (r *Client) sendMessage(action, message string) {
 	if err != nil {
 		log.Println(err)
 	}
+}
+
+func (r *Client) clientIsOwnerOfTheMessage(messageID string) bool {
+	for _, message := range r.messages {
+		if strings.EqualFold(message.ID, messageID) && strings.EqualFold(message.UserID, r.conn.LocalAddr().String()) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func (r *Client) MarshalReceivedMessage(message []byte, rlen int) (*out.Out, error) {
