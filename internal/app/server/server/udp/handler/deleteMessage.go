@@ -12,7 +12,7 @@ func (r *Server) handleDeleteMessage(parentCtx context.Context, in *in.In, remot
 	fmt.Printf("received %s from %s to delete", in, remote)
 
 	message := &model.Message{
-		ID: in.ID,
+		ID: in.Message,
 	}
 
 	err := r.broadcastMessage(message, remote)
