@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/service"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
 	"log"
@@ -57,8 +56,10 @@ func (r *Server) Handle(parentCtx context.Context) error {
 				return err
 			}
 		case "DELETE_MESSAGE":
-			fmt.Printf("DELETE MESSAGE")
-			fmt.Printf("received %s from %s\n", req, remote)
+			err := r.handleDeleteMessage(parentCtx, req, remote)
+			if err != nil {
+				return err
+			}
 		case "DISCONNECT":
 			err := r.handleDisconnection(parentCtx, remote)
 			if err != nil {

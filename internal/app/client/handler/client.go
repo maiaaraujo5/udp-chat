@@ -7,18 +7,23 @@ import (
 	in2 "github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
 	"log"
+	"math/rand"
 	"net"
 	"os"
+	"os/exec"
+	"strconv"
 	"strings"
 )
 
 type Client struct {
-	conn *net.UDPConn
+	conn     *net.UDPConn
+	messages map[string]*out.Out
 }
 
 func NewClient(conn *net.UDPConn) *Client {
 	return &Client{
-		conn: conn,
+		conn:     conn,
+		messages: make(map[string]*out.Out),
 	}
 }
 
@@ -66,14 +71,29 @@ func (r *Client) receiveMessages() {
 			log.Println(err)
 		}
 
-		formatted := fmt.Sprintf("%s -> %s: %s", msg.ID, msg.UserID, msg.Message)
+		if msg.ID != "" && msg.Message == "" {
+			delete(r.messages, msg.ID)
+			cmd := exec.Command("clear")
+			cmd.Stdout = os.Stdout
+			cmd.Run()
 
-		fmt.Println(formatted)
+			for _, msg := range r.messages {
+				formatted := fmt.Sprintf("%s -> %s: %s", msg.ID, msg.UserID, msg.Message)
+				fmt.Println(formatted)
+			}
+
+		} else {
+			r.messages[msg.ID] = msg
+
+			formatted := fmt.Sprintf("%s -> %s: %s", msg.ID, msg.UserID, msg.Message)
+			fmt.Println(formatted)
+		}
 	}
 }
 
 func (r *Client) sendMessage(action, message string) {
 	in := &in2.In{
+		ID:      strconv.Itoa(rand.Intn(10000)),
 		Action:  action,
 		Message: message,
 	}

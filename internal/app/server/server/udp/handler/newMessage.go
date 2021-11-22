@@ -14,6 +14,7 @@ func (r *Server) handleNewMessage(parentCtx context.Context, in *in.In, remote *
 	fmt.Printf("received %s from %s", in, remote)
 
 	message := &model.Message{
+		ID:      in.ID,
 		UserID:  remote.String(),
 		Message: in.Message,
 	}
