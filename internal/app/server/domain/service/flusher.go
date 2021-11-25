@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
 	"log"
 )
 
@@ -10,10 +11,13 @@ type Flusher interface {
 }
 
 type FlusherImpl struct {
+	repository repository.Repository
 }
 
-func NewFlusher() *FlusherImpl {
-	return &FlusherImpl{}
+func NewFlusher(repository repository.Repository) Flusher {
+	return &FlusherImpl{
+		repository: repository,
+	}
 }
 
 func (r *FlusherImpl) Execute(parentCtx context.Context) error {
