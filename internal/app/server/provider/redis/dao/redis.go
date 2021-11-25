@@ -5,7 +5,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
-	"time"
+	"strings"
 )
 
 type Redis struct {
@@ -19,29 +19,45 @@ func NewRedis(client *redis.Client) repository.Repository {
 }
 
 func (r *Redis) SaveAll(parentCtx context.Context, messages []model.Message) error {
-	r.client.Set(parentCtx, "messages", messages, 0)
+	var values []string
+
+	for _, message := range messages {
+		value := strings.Join([]string{message.ID, message.UserID, message.Message}, "-")
+		values = append(values, value)
+	}
+
+	err := r.client.Del(parentCtx, "messages").Err()
+	if err != nil {
+		return err
+	}
+
+	err = r.client.RPush(parentCtx, "messages", values).Err()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (r *Redis) List(parentCtx context.Context) ([]model.Message, error) {
-	return []model.Message{
-		{
-			ID:      "1",
-			UserID:  "123",
-			Message: "Passei de ano!",
-			Time:    time.Time{},
-		},
-		{
-			ID:      "2",
-			UserID:  "1234",
-			Message: "Que legal!",
-			Time:    time.Time{},
-		},
-		{
-			ID:      "3",
-			UserID:  "12345",
-			Message: "Parabens",
-			Time:    time.Time{},
-		},
-	}, nil
+
+	var messages []model.Message
+
+	values, err := r.client.LRange(parentCtx, "messages", 0, -1).Result()
+	if err != nil {
+		return nil, err
+	}
+
+	for _, value := range values {
+		v := strings.Split(value, "-")
+		message := model.Message{
+			ID:      v[0],
+			UserID:  v[1],
+			Message: v[2],
+		}
+
+		messages = append(messages, message)
+	}
+
+	return messages, nil
 }

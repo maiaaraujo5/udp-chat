@@ -19,17 +19,15 @@ func (r *Server) handleNewMessage(parentCtx context.Context, in *in.In, remote *
 		Message: in.Message,
 	}
 
-	err := r.saveMessage.Execute(parentCtx, message)
-
+	err := r.broadcastMessage(message, remote)
 	if err != nil {
 		return err
 	}
 
-	err = r.broadcastMessage(message, remote)
+	err = r.saveMessage.Execute(parentCtx, message)
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 

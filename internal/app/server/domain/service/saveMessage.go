@@ -24,11 +24,20 @@ func NewSaver(repository repository.Repository) Saver {
 func (r *SaverImpl) Execute(ctx context.Context, message *model.Message) error {
 	log.Println("saving new message - SERVICE")
 
-	var messages []model.Message
+	messages, err := r.repository.List(ctx)
+	if err != nil {
+		return err
+	}
+
+	if len(messages) >= 3 {
+		for i := 0; i <= len(messages); i++ {
+			messages = append(messages[:i], messages[i+1:]...)
+		}
+	}
 
 	messages = append(messages, *message)
 
-	err := r.repository.SaveAll(ctx, messages)
+	err = r.repository.SaveAll(ctx, messages)
 	if err != nil {
 		return err
 	}
