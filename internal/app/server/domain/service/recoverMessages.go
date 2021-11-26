@@ -22,9 +22,18 @@ func NewRecover(repository repository.Repository) Recover {
 
 func (r *RecoverImpl) Execute(ctx context.Context) ([]model.Message, error) {
 
-	messages, err := r.repository.List(ctx)
+	var messages []model.Message
+
+	list, err := r.repository.List(ctx)
 	if err != nil {
 		return nil, err
+	}
+
+	for element := list.Front(); element != nil; element = element.Next() {
+
+		message := element.Value.(model.Message)
+
+		messages = append(messages, message)
 	}
 
 	return messages, nil

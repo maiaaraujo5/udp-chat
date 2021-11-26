@@ -22,5 +22,10 @@ func NewFlusher(repository repository.Repository) Flusher {
 
 func (r *FlusherImpl) Execute(parentCtx context.Context) error {
 	log.Println("Flushing database")
+	err := r.repository.Flush(parentCtx)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

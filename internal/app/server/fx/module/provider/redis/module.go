@@ -10,6 +10,7 @@ func Module() fx.Option {
 	return fx.Options(
 		fx.Provide(
 			redis.Connect,
+			dao.NewConfig,
 			dao.NewRedis,
 		),
 	)

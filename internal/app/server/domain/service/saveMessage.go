@@ -29,13 +29,11 @@ func (r *SaverImpl) Execute(ctx context.Context, message *model.Message) error {
 		return err
 	}
 
-	if len(messages) >= 3 {
-		for i := 0; i <= len(messages); i++ {
-			messages = append(messages[:i], messages[i+1:]...)
-		}
+	if messages.Len() >= 3 {
+		messages.Remove(messages.Front())
 	}
 
-	messages = append(messages, *message)
+	messages.PushBack(*message)
 
 	err = r.repository.SaveAll(ctx, messages)
 	if err != nil {
