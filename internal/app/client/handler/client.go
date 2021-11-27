@@ -39,12 +39,9 @@ func (r *Client) Handle() error {
 		message = strings.Trim(message, "\r\n")
 
 		args := strings.Split(message, " ")
-		command := strings.TrimSpace(args[0])
 
-		var msg string
-		for i := 1; i < len(args); i++ {
-			msg += args[i] + " "
-		}
+		command := strings.TrimSpace(args[0])
+		msg := strings.Join(args[1:], " ")
 
 		switch command {
 		case "/msg":

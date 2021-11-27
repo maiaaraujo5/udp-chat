@@ -10,6 +10,8 @@ func Module() fx.Option {
 	return fx.Options(
 		redis.Module(),
 		fx.Provide(
+			service.NewConfig,
+			service.NewDelete,
 			service.NewFlusher,
 			service.NewRecover,
 			service.NewSaver,

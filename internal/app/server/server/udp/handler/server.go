@@ -13,15 +13,19 @@ type Server struct {
 	connections    map[string]*net.UDPAddr
 	messageRecover service.Recover
 	saveMessage    service.Saver
+	deleteMessage  service.DeleteMessage
 	flusher        service.Flusher
 	conn           *net.UDPConn
 }
 
-func NewServer(messageRecover service.Recover, saver service.Saver, flusher service.Flusher, conn *net.UDPConn) *Server {
+func NewServer(messageRecover service.Recover, saver service.Saver, deleteMessage service.DeleteMessage,
+	flusher service.Flusher, conn *net.UDPConn) *Server {
+
 	return &Server{
 		connections:    make(map[string]*net.UDPAddr),
 		messageRecover: messageRecover,
 		saveMessage:    saver,
+		deleteMessage:  deleteMessage,
 		flusher:        flusher,
 		conn:           conn,
 	}

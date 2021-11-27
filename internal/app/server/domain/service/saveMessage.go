@@ -13,11 +13,13 @@ type Saver interface {
 
 type SaverImpl struct {
 	repository repository.Repository
+	config     *config
 }
 
-func NewSaver(repository repository.Repository) Saver {
+func NewSaver(repository repository.Repository, config *config) Saver {
 	return &SaverImpl{
 		repository: repository,
+		config:     config,
 	}
 }
 
@@ -29,7 +31,7 @@ func (r *SaverImpl) Execute(ctx context.Context, message *model.Message) error {
 		return err
 	}
 
-	if messages.Len() >= 3 {
+	if messages.Len() >= r.config.maxMessagesInHistory {
 		messages.Remove(messages.Front())
 	}
 
