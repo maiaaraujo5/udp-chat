@@ -29,9 +29,11 @@ func (d *DeleteImpl) Execute(parentCtx context.Context, message *model.Message) 
 	}
 
 	element := d.findMessageInList(messages, message)
-	if element != nil {
-		messages.Remove(element)
+	if element == nil {
+		return nil
 	}
+
+	messages.Remove(element)
 
 	err = d.repository.SaveAll(parentCtx, messages)
 	if err != nil {
