@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-func (r *Server) handleDisconnection(parentCtx context.Context, remote *net.UDPAddr) error {
+func (r *Server) handleDisconnection(parentCtx context.Context, remote net.Addr) error {
 	message := &model.Message{Message: "Leave the room!", UserID: remote.String()}
 
 	if address, ok := r.connections[remote.String()]; ok {

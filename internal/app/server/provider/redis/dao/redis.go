@@ -4,6 +4,7 @@ import (
 	"container/list"
 	"context"
 	"github.com/go-redis/redis/v8"
+	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
 	"strings"
@@ -24,6 +25,7 @@ func NewRedis(client *redis.Client, config *Config) repository.Repository {
 func (r *Redis) SaveAll(parentCtx context.Context, messages *list.List) error {
 	var values []string
 
+	logger.Trace("converting messages to array of strings")
 	for element := messages.Front(); element != nil; element = element.Next() {
 		message := element.Value.(model.Message)
 
@@ -31,28 +33,32 @@ func (r *Redis) SaveAll(parentCtx context.Context, messages *list.List) error {
 		values = append(values, value)
 	}
 
+	logger.Trace("deleting old messages from redis")
 	err := r.client.Del(parentCtx, r.config.Key).Err()
 	if err != nil {
 		return err
 	}
 
+	logger.Trace("saving new messages in redis")
 	err = r.client.RPush(parentCtx, r.config.Key, values).Err()
 	if err != nil {
 		return err
 	}
 
+	logger.Trace("messages saved successfully")
 	return nil
 }
 
 func (r *Redis) List(parentCtx context.Context) (*list.List, error) {
 
 	messages := list.New()
-
+	logger.Trace("recovering messages from redis")
 	values, err := r.client.LRange(parentCtx, r.config.Key, 0, -1).Result()
 	if err != nil {
 		return nil, err
 	}
 
+	logger.Trace("converting messages to domain model")
 	for _, value := range values {
 		v := strings.Split(value, "-")
 		message := model.Message{
@@ -64,6 +70,7 @@ func (r *Redis) List(parentCtx context.Context) (*list.List, error) {
 		messages.PushBack(message)
 	}
 
+	logger.Trace("messages found successfully")
 	return messages, nil
 }
 

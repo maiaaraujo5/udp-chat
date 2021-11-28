@@ -5,7 +5,7 @@ import gostartconfig "github.com/maiaaraujo5/gostart/config"
 const root = "app.service"
 
 type config struct {
-	maxMessagesInHistory int
+	MaxMessagesInHistory int
 }
 
 func defaultConfig() {

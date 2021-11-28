@@ -3,26 +3,28 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"github.com/maiaaraujo5/gostart/log/logger"
+	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/service"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
-	"log"
+	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/out"
 	"net"
 )
 
 type Server struct {
-	connections    map[string]*net.UDPAddr
+	connections    map[string]net.Addr
 	messageRecover service.Recover
 	saveMessage    service.Saver
 	deleteMessage  service.DeleteMessage
 	flusher        service.Flusher
-	conn           *net.UDPConn
+	conn           net.PacketConn
 }
 
 func NewServer(messageRecover service.Recover, saver service.Saver, deleteMessage service.DeleteMessage,
 	flusher service.Flusher, conn *net.UDPConn) *Server {
 
 	return &Server{
-		connections:    make(map[string]*net.UDPAddr),
+		connections:    make(map[string]net.Addr),
 		messageRecover: messageRecover,
 		saveMessage:    saver,
 		deleteMessage:  deleteMessage,
@@ -32,20 +34,12 @@ func NewServer(messageRecover service.Recover, saver service.Saver, deleteMessag
 }
 
 func (r *Server) Handle(parentCtx context.Context) error {
-	log.Println("handling...")
-
+	logger.Info("Server started...")
 	for {
 		message := make([]byte, 1024)
-		rlen, remote, err := r.conn.ReadFromUDP(message[:])
+		rlen, remote, err := r.conn.ReadFrom(message[:])
 		if err != nil {
-			panic(err)
-		}
-
-		if r.isNewConnection(remote) {
-			err := r.sendOldMessages(parentCtx, remote, r.conn)
-			if err != nil {
-				return err
-			}
+			return err
 		}
 
 		req, err := r.DecodeJsonIntoModel(message, rlen)
@@ -54,6 +48,11 @@ func (r *Server) Handle(parentCtx context.Context) error {
 		}
 
 		switch req.Action {
+		case "NEW_CONNECTION":
+			err := r.handleNewConnection(parentCtx, req, remote)
+			if err != nil {
+				return err
+			}
 		case "NEW_MESSAGE":
 			err := r.handleNewMessage(parentCtx, req, remote)
 			if err != nil {
@@ -71,6 +70,29 @@ func (r *Server) Handle(parentCtx context.Context) error {
 			}
 		}
 	}
+}
+
+func (r *Server) broadcastMessage(message *model.Message, remote net.Addr) error {
+	outMessage := out.Out{
+		ID:      message.ID,
+		UserID:  message.UserID,
+		Message: message.Message,
+		Time:    message.Time,
+	}
+	bytes, err := json.Marshal(outMessage)
+	if err != nil {
+		return err
+	}
+
+	for _, connection := range r.connections {
+		if connection != remote {
+			_, err = r.conn.WriteTo(bytes, connection)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func (r *Server) DecodeJsonIntoModel(message []byte, rlen int) (*in.In, error) {

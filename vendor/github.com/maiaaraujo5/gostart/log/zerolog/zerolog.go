@@ -70,6 +70,10 @@ func (z zeroLog) Info(msg string) {
 	z.logger.Info().Msg(msg)
 }
 
+func (z zeroLog) Trace(msg string) {
+	z.logger.Trace().Msg(msg)
+}
+
 func (z zeroLog) Debug(msg string) {
 	z.logger.Debug().Msg(msg)
 }

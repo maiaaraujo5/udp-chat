@@ -8,7 +8,7 @@ import (
 	"net"
 )
 
-func (r *Server) handleDeleteMessage(parentCtx context.Context, in *in.In, remote *net.UDPAddr) error {
+func (r *Server) handleDeleteMessage(parentCtx context.Context, in *in.In, remote net.Addr) error {
 	fmt.Printf("received %s from %s to delete", in, remote)
 
 	message := &model.Message{

@@ -11,5 +11,6 @@ type Log interface {
 	Error(msg string)
 	Warn(msg string)
 	Info(msg string)
+	Trace(msg string)
 	Debug(msg string)
 }

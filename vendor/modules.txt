@@ -45,6 +45,7 @@ github.com/maiaaraujo5/gostart/cache/redis
 github.com/maiaaraujo5/gostart/config
 github.com/maiaaraujo5/gostart/log
 github.com/maiaaraujo5/gostart/log/instance
+github.com/maiaaraujo5/gostart/log/logger
 github.com/maiaaraujo5/gostart/log/zerolog
 github.com/maiaaraujo5/gostart/udp/server
 # github.com/mitchellh/mapstructure v1.1.2

@@ -1,0 +1,8 @@
+gostart:
+  app:
+    name: udp-chat-server
+
+app:
+  provider:
+    redis:
+      key: messages

@@ -72,7 +72,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			fields: fields{
 				repository: new(mocks.Repository),
 				config: &config{
-					maxMessagesInHistory: 3,
+					MaxMessagesInHistory: 3,
 				},
 			},
 			args: args{
@@ -99,7 +99,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			fields: fields{
 				repository: new(mocks.Repository),
 				config: &config{
-					maxMessagesInHistory: 3,
+					MaxMessagesInHistory: 3,
 				},
 			},
 			args: args{
@@ -131,7 +131,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			fields: fields{
 				repository: new(mocks.Repository),
 				config: &config{
-					maxMessagesInHistory: 3,
+					MaxMessagesInHistory: 3,
 				},
 			},
 			args: args{
@@ -166,7 +166,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			fields: fields{
 				repository: new(mocks.Repository),
 				config: &config{
-					maxMessagesInHistory: 3,
+					MaxMessagesInHistory: 3,
 				},
 			},
 			args: args{
@@ -187,7 +187,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			fields: fields{
 				repository: new(mocks.Repository),
 				config: &config{
-					maxMessagesInHistory: 3,
+					MaxMessagesInHistory: 3,
 				},
 			},
 			args: args{

@@ -1,0 +1,4 @@
+gostart:
+  redis:
+    addr: localhost:6379
+    db: 0

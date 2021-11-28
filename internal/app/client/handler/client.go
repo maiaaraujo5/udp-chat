@@ -13,6 +13,14 @@ import (
 	"os/exec"
 	"strconv"
 	"strings"
+	"time"
+)
+
+const (
+	NewConnection = "NEW_CONNECTION"
+	NewMessage    = "NEW_MESSAGE"
+	DeleteMessage = "DELETE_MESSAGE"
+	Disconnection = "DISCONNECT"
 )
 
 type Client struct {
@@ -27,7 +35,7 @@ func NewClient(conn *net.UDPConn) *Client {
 }
 
 func (r *Client) Handle() error {
-	r.sendMessage("NEW_MESSAGE", "Joined the room!")
+	r.sendMessage(NewConnection, "Joined the room!")
 	go r.receiveMessages()
 
 	for {
@@ -45,14 +53,13 @@ func (r *Client) Handle() error {
 
 		switch command {
 		case "/msg":
-			r.sendMessage("NEW_MESSAGE", msg)
+			r.sendMessage(NewMessage, msg)
 		case "/del":
 			if r.clientIsOwnerOfTheMessage(strings.TrimSpace(msg)) {
-				r.sendMessage("DELETE_MESSAGE", msg)
+				r.sendMessage(DeleteMessage, msg)
 			}
 		case "/quit":
-			r.sendMessage("DISCONNECT", "Bye")
-
+			r.sendMessage(Disconnection, "Bye")
 		}
 	}
 }
@@ -65,7 +72,7 @@ func (r *Client) receiveMessages() {
 			log.Println(err)
 		}
 
-		msg, err := r.MarshalReceivedMessage(message, rlen)
+		msg, err := r.unmarshalReceivedMessage(message, rlen)
 		if err != nil {
 			log.Println(err)
 		}
@@ -97,7 +104,7 @@ func (r *Client) receiveMessages() {
 
 func (r *Client) sendMessage(action, message string) {
 	in := &in2.In{
-		ID:      strconv.Itoa(rand.Intn(10000)),
+		ID:      r.generateId(),
 		Action:  action,
 		Message: message,
 	}
@@ -113,6 +120,12 @@ func (r *Client) sendMessage(action, message string) {
 	}
 }
 
+func (r *Client) generateId() string {
+	rand.Seed(time.Now().Unix())
+	number := rand.Intn(9999)
+	return strconv.Itoa(number)
+}
+
 func (r *Client) clientIsOwnerOfTheMessage(messageID string) bool {
 	for _, message := range r.messages {
 		if strings.EqualFold(message.ID, messageID) && strings.EqualFold(message.UserID, r.conn.LocalAddr().String()) {
@@ -123,7 +136,7 @@ func (r *Client) clientIsOwnerOfTheMessage(messageID string) bool {
 	return false
 }
 
-func (r *Client) MarshalReceivedMessage(message []byte, rlen int) (*out.Out, error) {
+func (r *Client) unmarshalReceivedMessage(message []byte, rlen int) (*out.Out, error) {
 	req := &out.Out{}
 	err := json.Unmarshal(message[:rlen], req)
 	if err != nil {
