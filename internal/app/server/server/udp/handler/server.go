@@ -47,29 +47,37 @@ func (r *Server) Handle(parentCtx context.Context) error {
 			return err
 		}
 
-		switch req.Action {
-		case "NEW_CONNECTION":
-			err := r.handleNewConnection(parentCtx, req, remote)
-			if err != nil {
-				return err
-			}
-		case "NEW_MESSAGE":
-			err := r.handleNewMessage(parentCtx, req, remote)
-			if err != nil {
-				return err
-			}
-		case "DELETE_MESSAGE":
-			err := r.handleDeleteMessage(parentCtx, req, remote)
-			if err != nil {
-				return err
-			}
-		case "DISCONNECT":
-			err := r.handleDisconnection(parentCtx, remote)
-			if err != nil {
-				return err
-			}
+		err = r.handle(parentCtx, req, remote)
+		if err != nil {
+			return err
 		}
 	}
+}
+
+func (r *Server) handle(parentCtx context.Context, message *in.In, remote net.Addr) error {
+	switch message.Action {
+	case "NEW_CONNECTION":
+		err := r.handleNewConnection(parentCtx, message, remote)
+		if err != nil {
+			return err
+		}
+	case "NEW_MESSAGE":
+		err := r.handleNewMessage(parentCtx, message, remote)
+		if err != nil {
+			return err
+		}
+	case "DELETE_MESSAGE":
+		err := r.handleDeleteMessage(parentCtx, message, remote)
+		if err != nil {
+			return err
+		}
+	case "DISCONNECT":
+		err := r.handleDisconnection(parentCtx, remote)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (r *Server) broadcastMessage(message *model.Message, remote net.Addr) error {

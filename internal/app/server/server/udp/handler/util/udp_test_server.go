@@ -1,6 +1,8 @@
 package util
 
-import "net"
+import (
+	"net"
+)
 
 func CreateUdpServer() *net.UDPConn {
 	conn, _ := net.ListenUDP("udp", &net.UDPAddr{
