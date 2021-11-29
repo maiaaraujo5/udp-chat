@@ -49,7 +49,7 @@ func (s *DaoSuite) TestNewRedis() {
 	tests := []struct {
 		name string
 		args args
-		want cache.Repository
+		want repository.Repository
 	}{
 		{
 			name: "should build NewRedis successfully",
