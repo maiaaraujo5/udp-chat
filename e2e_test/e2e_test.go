@@ -7,7 +7,6 @@ import (
 	"github.com/go-redis/redis/v8"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/fx/module/runnner"
 	"github.com/stretchr/testify/suite"
-	"log"
 	"net"
 	"sync"
 	"testing"
@@ -51,6 +50,7 @@ func (s *e2eTestSuite) SetupSuite() {
 	}()
 
 	wg.Wait()
+	time.Sleep(1 * time.Second)
 }
 
 func (s *e2eTestSuite) SetupTest() {
@@ -58,14 +58,10 @@ func (s *e2eTestSuite) SetupTest() {
 	s.Assert().NoError(err)
 
 	addr, err := net.ResolveUDPAddr("udp", "0.0.0.0:3000")
-	if err != nil {
-		log.Fatal(err)
-	}
+	s.Assert().NoError(err)
 
 	conn, err := net.DialUDP("udp", nil, addr)
-	if err != nil {
-		log.Fatal(err)
-	}
+	s.Assert().NoError(err)
 
 	s.conn = conn
 }
@@ -79,8 +75,8 @@ func (s *e2eTestSuite) Test_EndToEnd_New_Connection_Without_Old_Messages() {
 	values, err := s.redis.LRange(context.Background(), "messages", 0, -1).Result()
 	s.Assert().NoError(err)
 
-	s.Assert().True(len(values) == 1)
-	s.Assert().Equal(values[0], fmt.Sprintf("123-%s-join the room", s.conn.LocalAddr().String()))
+	s.Assert().Len(values, 1)
+	s.Assert().Equal(fmt.Sprintf("123-%s-join the room", s.conn.LocalAddr().String()), values[0])
 }
 
 func (s *e2eTestSuite) Test_EndToEnd_New_Connection_With_Old_Messages() {
@@ -102,9 +98,9 @@ func (s *e2eTestSuite) Test_EndToEnd_New_Connection_With_Old_Messages() {
 	s.Assert().NoError(err)
 
 	s.Assert().Equal("{\"id\":\"122\",\"user_id\":\"127.0.0.1:5315\",\"message\":\"Hello\",\"time\":\"0001-01-01T00:00:00Z\"}", fmt.Sprint(str))
-	s.Assert().True(len(values) == 2)
-	s.Assert().Equal(values[0], "122-127.0.0.1:5315-Hello")
-	s.Assert().Equal(values[1], fmt.Sprintf("123-%s-join the room", s.conn.LocalAddr().String()))
+	s.Assert().Len(values, 2)
+	s.Assert().Equal("122-127.0.0.1:5315-Hello", values[0])
+	s.Assert().Equal(fmt.Sprintf("123-%s-join the room", s.conn.LocalAddr().String()), values[1])
 }
 
 func (s *e2eTestSuite) Test_EndToEnd_New_Receive_Message() {
@@ -116,6 +112,24 @@ func (s *e2eTestSuite) Test_EndToEnd_New_Receive_Message() {
 	values, err := s.redis.LRange(context.Background(), "messages", 0, -1).Result()
 	s.Assert().NoError(err)
 
-	s.Assert().True(len(values) == 1)
-	s.Assert().Equal(values[0], fmt.Sprintf("123-%s-Hello", s.conn.LocalAddr().String()))
+	s.Assert().Len(values, 1)
+	s.Assert().Equal(fmt.Sprintf("123-%s-Hello", s.conn.LocalAddr().String()), values[0])
+}
+
+func (s *e2eTestSuite) Test_EndToEnd_Delete_Message() {
+	err := s.redis.RPush(s.redis.Context(), "messages", []string{"122-127.0.0.1:5315-Hello",
+		fmt.Sprintf("123-%s-Hey", s.conn.LocalAddr().String())}).Err()
+
+	s.Assert().NoError(err)
+
+	_, err = s.conn.Write([]byte("{\"action\":\"DELETE_MESSAGE\",\"message\":\"123\"}"))
+	s.Assert().NoError(err)
+
+	time.Sleep(10 * time.Millisecond)
+
+	values, err := s.redis.LRange(context.Background(), "messages", 0, -1).Result()
+	s.Assert().NoError(err)
+
+	s.Assert().Len(values, 1)
+	s.Assert().Equal("122-127.0.0.1:5315-Hello", values[0])
 }
