@@ -88,7 +88,7 @@ func (s *e2eTestSuite) Test_EndToEnd_New_Connection_With_Old_Messages() {
 	_, err = s.conn.Write([]byte("{\"id\":\"123\",\"action\":\"NEW_CONNECTION\",\"message\":\"join the room\"}"))
 	s.Assert().NoError(err)
 
-	b := make([]byte, 87)
+	b := make([]byte, 57)
 	_, err = s.conn.Read(b)
 	s.Assert().NoError(err)
 	str := string(b)
@@ -97,7 +97,7 @@ func (s *e2eTestSuite) Test_EndToEnd_New_Connection_With_Old_Messages() {
 	values, err := s.redis.LRange(context.Background(), "messages", 0, -1).Result()
 	s.Assert().NoError(err)
 
-	s.Assert().Equal("{\"id\":\"122\",\"user_id\":\"127.0.0.1:5315\",\"message\":\"Hello\",\"time\":\"0001-01-01T00:00:00Z\"}", fmt.Sprint(str))
+	s.Assert().Equal("{\"id\":\"122\",\"user_id\":\"127.0.0.1:5315\",\"message\":\"Hello\"}", fmt.Sprint(str))
 	s.Assert().Len(values, 2)
 	s.Assert().Equal("122-127.0.0.1:5315-Hello", values[0])
 	s.Assert().Equal(fmt.Sprintf("123-%s-join the room", s.conn.LocalAddr().String()), values[1])
