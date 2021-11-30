@@ -85,7 +85,6 @@ func (r *Server) broadcastMessage(message *model.Message, remote net.Addr) error
 		ID:      message.ID,
 		UserID:  message.UserID,
 		Message: message.Message,
-		Time:    message.Time,
 	}
 	bytes, err := json.Marshal(outMessage)
 	if err != nil {
