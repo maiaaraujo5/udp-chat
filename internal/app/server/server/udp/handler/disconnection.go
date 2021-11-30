@@ -3,8 +3,8 @@ package handler
 import (
 	"context"
 	"fmt"
+	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
-	"log"
 	"net"
 )
 
@@ -38,6 +38,6 @@ func (r *Server) handleDisconnection(parentCtx context.Context, remote net.Addr)
 }
 
 func (r *Server) thereAreStillActiveConnections() bool {
-	log.Println(fmt.Sprintf("Ainda há %d conexões ativas", len(r.connections)))
+	logger.Debug(fmt.Sprintf("Ainda há %d conexões ativas", len(r.connections)))
 	return len(r.connections) > 0
 }

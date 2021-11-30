@@ -3,6 +3,7 @@ package service
 import (
 	"container/list"
 	"context"
+	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
 	"strings"
@@ -23,23 +24,28 @@ func NewDelete(repository repository.Repository) DeleteMessage {
 }
 
 func (d *DeleteImpl) Execute(parentCtx context.Context, message *model.Message) error {
+	logger.Debug("recovering messages from repository")
 	messages, err := d.repository.List(parentCtx)
 	if err != nil {
 		return err
 	}
 
+	logger.Debug("finding message to delete in list")
 	element := d.findMessageInList(messages, message)
 	if element == nil {
 		return nil
 	}
 
+	logger.Debug("removing message from list of messages")
 	messages.Remove(element)
 
+	logger.Debug("saving messages in repository")
 	err = d.repository.SaveAll(parentCtx, messages)
 	if err != nil {
 		return err
 	}
 
+	logger.Info("message successfully deleted")
 	return nil
 }
 

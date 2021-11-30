@@ -3,6 +3,7 @@ package dao
 import (
 	"container/list"
 	"context"
+	"fmt"
 	"github.com/go-redis/redis/v8"
 	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
@@ -36,13 +37,15 @@ func (r *Redis) SaveAll(parentCtx context.Context, messages *list.List) error {
 	logger.Trace("deleting old messages from redis")
 	err := r.client.Del(parentCtx, r.config.Key).Err()
 	if err != nil {
-		return err
+		logger.Warn(fmt.Sprintf("error to delete old messages from redis: %s", err))
+		return nil
 	}
 
 	logger.Trace("saving new messages in redis")
 	err = r.client.RPush(parentCtx, r.config.Key, values).Err()
 	if err != nil {
-		return err
+		logger.Warn(fmt.Sprintf("error to save new messages in redis %s", err))
+		return nil
 	}
 
 	logger.Trace("messages saved successfully")
@@ -55,7 +58,8 @@ func (r *Redis) List(parentCtx context.Context) (*list.List, error) {
 	logger.Trace("recovering messages from redis")
 	values, err := r.client.LRange(parentCtx, r.config.Key, 0, -1).Result()
 	if err != nil {
-		return nil, err
+		logger.Warn(fmt.Sprintf("error to recover old messages from redis: %s", err))
+		return messages, nil
 	}
 
 	logger.Trace("converting messages to domain model")
@@ -77,7 +81,7 @@ func (r *Redis) List(parentCtx context.Context) (*list.List, error) {
 func (r *Redis) Flush(parentCtx context.Context) error {
 	err := r.client.FlushAllAsync(parentCtx).Err()
 	if err != nil {
-		return err
+		logger.Warn(fmt.Sprintf("error to flush db in redis: %s", err))
 	}
 	return nil
 }

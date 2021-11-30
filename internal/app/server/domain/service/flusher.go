@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
+	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
-	"log"
 )
 
 type Flusher interface {
@@ -21,11 +21,12 @@ func NewFlusher(repository repository.Repository) Flusher {
 }
 
 func (r *FlusherImpl) Execute(parentCtx context.Context) error {
-	log.Println("Flushing database")
+	logger.Debug("flushing database")
 	err := r.repository.Flush(parentCtx)
 	if err != nil {
 		return err
 	}
 
+	logger.Info("repository flushed")
 	return nil
 }
