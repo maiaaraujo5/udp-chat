@@ -3,6 +3,8 @@ gostart:
     name: udp-chat-server
 
 app:
+  service:
+    maxmessagesinhistory: 20
   provider:
     redis:
       key: messages
