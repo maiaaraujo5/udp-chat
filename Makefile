@@ -18,3 +18,4 @@ build-client:
 		go mod vendor
 		go build -mod vendor -o ./dist/client/main ./cmd/chat/client/main.go
 
+
