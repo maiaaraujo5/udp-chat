@@ -13,9 +13,17 @@ docker-compose-run-redis:
 build-server:
 		go mod vendor
 		go build -mod vendor -o ./dist/server/main ./cmd/chat/server/main.go
+		cp ./config/server/*.yaml ./dist/server
 
 build-client:
 		go mod vendor
 		go build -mod vendor -o ./dist/client/main ./cmd/chat/client/main.go
 
+run-server-with-redis: docker-compose-run-redis
+		CONF=./config/server/default.yaml,config/server/development.yaml go run cmd/chat/server/main.go
 
+run-server:
+		CONF=./config/server/default.yaml,config/server/development.yaml go run cmd/chat/server/main.go
+
+run-client:
+		go run cmd/chat/client/main.go

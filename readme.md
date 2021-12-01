@@ -19,6 +19,17 @@
 * Redis is not a strong dependency, if something bad happens to redis the chat would continue working.
 * Don't use redis specific functions like Ltrim to maintain the history size so as not to create a coupling between the provider and the service.
 # *How to Run The Application*
+ ## Server:
+  To run the server we have two ways:
+
+ ### make run-server-with-redis:
+ Use this command if you don't have one instance of redis. This command will run one docker-compose to up one instance of redis and run the application
+
+ ### make run-server:
+ Use this command if you have one instance of redis. To use your redis instance change the configuration in configs/development.yaml
+
+## Client:
+To run the client use this command **make run-client**
 
 # *How to use the client*
 After the client is running, he will accept the following commands:
