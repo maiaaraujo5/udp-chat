@@ -10,7 +10,8 @@ import (
 
 type ClientSuite struct {
 	suite.Suite
-	conn *net.UDPConn
+	server *net.UDPConn
+	client *net.UDPConn
 }
 
 func TestClientSuite(t *testing.T) {
@@ -18,7 +19,8 @@ func TestClientSuite(t *testing.T) {
 }
 
 func (s *ClientSuite) SetupSuite() {
-	s.conn = util.CreateUdpServer()
+	s.server = util.CreateUdpServer()
+	s.client = util.CreateUdpClient()
 }
 
 func (s *ClientSuite) TestNewClient() {
@@ -33,10 +35,10 @@ func (s *ClientSuite) TestNewClient() {
 		{
 			name: "should build NewClient successfully",
 			args: args{
-				conn: s.conn,
+				conn: s.client,
 			},
 			want: &Client{
-				conn: s.conn,
+				conn: s.client,
 			},
 		},
 	}

@@ -1,17 +1,22 @@
 package handler
 
 import (
-	"log"
+	"errors"
 	"strings"
 )
 
-func (r *Client) handleDeleteMessage(msg string) {
-	if r.clientIsOwnerOfTheMessage(strings.TrimSpace(msg)) {
-		r.handleSendMessage(DeleteMessage, msg)
-		return
+func (r *Client) handleDeleteMessage(msg string) error {
+
+	if !r.clientIsOwnerOfTheMessage(msg) {
+		return errors.New("you can't delete a message that was not sent by you")
 	}
 
-	log.Println("you can't delete a message that was not sent by you!")
+	err := r.handleSendMessage(DeleteMessage, msg)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }
 
 func (r *Client) clientIsOwnerOfTheMessage(messageID string) bool {

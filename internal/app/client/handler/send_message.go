@@ -3,13 +3,12 @@ package handler
 import (
 	"encoding/json"
 	in2 "github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
-	"log"
 	"math/rand"
 	"strconv"
 	"time"
 )
 
-func (r *Client) handleSendMessage(action, message string) {
+func (r *Client) handleSendMessage(action, message string) error {
 	in := &in2.In{
 		ID:      r.generateId(),
 		Action:  action,
@@ -18,13 +17,15 @@ func (r *Client) handleSendMessage(action, message string) {
 
 	b, err := json.Marshal(in)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	_, err = r.conn.Write(b)
 	if err != nil {
-		log.Println(err)
+		return err
 	}
+
+	return nil
 }
 
 func (r *Client) generateId() string {

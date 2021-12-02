@@ -12,3 +12,10 @@ func CreateUdpServer() *net.UDPConn {
 
 	return conn
 }
+
+func CreateUdpClient() *net.UDPConn {
+	addr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:3500")
+
+	conn, _ := net.DialUDP("udp", nil, addr)
+	return conn
+}

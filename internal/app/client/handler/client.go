@@ -3,6 +3,7 @@ package handler
 import (
 	"bufio"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
+	"log"
 	"net"
 	"os"
 	"strings"
@@ -27,7 +28,10 @@ func NewClient(conn *net.UDPConn) *Client {
 }
 
 func (r *Client) Handle() error {
-	r.handleSendMessage(NewConnection, "Joined the room!")
+	err := r.handleSendMessage(NewConnection, "Joined the room!")
+	if err != nil {
+		log.Printf("error to connect in room. please try again. %s", err)
+	}
 	go r.handleNewMessages()
 
 	for {
@@ -45,11 +49,20 @@ func (r *Client) Handle() error {
 
 		switch command {
 		case "/msg":
-			r.handleSendMessage(NewMessage, msg)
+			err := r.handleSendMessage(NewMessage, msg)
+			if err != nil {
+				log.Printf("error to send message. please try again. %s", err)
+			}
 		case "/del":
-			r.handleDeleteMessage(msg)
+			err := r.handleDeleteMessage(msg)
+			if err != nil {
+				log.Printf("error to delete message. please try again. %s", err)
+			}
 		case "/quit":
-			r.handleSendMessage(Disconnection, "Bye")
+			err := r.handleSendMessage(Disconnection, "Bye")
+			if err != nil {
+				log.Printf("error to quit room. please try again. %s", err)
+			}
 		}
 	}
 }
