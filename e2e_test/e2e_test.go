@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/alicebob/miniredis/v2"
 	"github.com/go-redis/redis/v8"
-	"github.com/maiaaraujo5/udp-chat/internal/app/server/fx/module/runnner"
+	"github.com/maiaaraujo5/udp-chat/internal/app/server/fx/module/runner"
 	"github.com/stretchr/testify/suite"
 	"net"
 	"sync"
@@ -43,7 +43,7 @@ func (s *e2eTestSuite) SetupSuite() {
 	go func() {
 		wg.Add(1)
 		defer wg.Done()
-		err := runnner.Run()
+		err := runner.Run()
 		if err != nil {
 			panic(err)
 		}
