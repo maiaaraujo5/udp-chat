@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
 	"github.com/stretchr/testify/mock"
 	"net"
 	"reflect"
@@ -10,16 +10,16 @@ import (
 func (s *ClientSuite) TestClient_receiveMessages() {
 	type fields struct {
 		conn     *net.UDPConn
-		messages []out.Out
+		messages []in.In
 	}
 	type args struct {
-		msg *out.Out
+		msg *in.In
 	}
 	tests := []struct {
 		name   string
 		fields fields
 		args   args
-		want   []out.Out
+		want   []in.In
 	}{
 		{
 			name: "should successfully receive one new message and append in the history when history is nil",
@@ -27,13 +27,13 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 				conn: s.client,
 			},
 			args: args{
-				msg: &out.Out{
+				msg: &in.In{
 					ID:      mock.Anything,
 					UserID:  mock.Anything,
 					Message: mock.Anything,
 				},
 			},
-			want: []out.Out{
+			want: []in.In{
 				{
 					ID:      mock.Anything,
 					UserID:  mock.Anything,
@@ -45,7 +45,7 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 			name: "should successfully receive one new message and append in the history when history is not empty",
 			fields: fields{
 				conn: s.client,
-				messages: []out.Out{
+				messages: []in.In{
 					{
 						ID:      "1",
 						UserID:  mock.Anything,
@@ -54,13 +54,13 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 				},
 			},
 			args: args{
-				msg: &out.Out{
+				msg: &in.In{
 					ID:      "2",
 					UserID:  mock.Anything,
 					Message: mock.Anything,
 				},
 			},
-			want: []out.Out{
+			want: []in.In{
 				{
 					ID:      "1",
 					UserID:  mock.Anything,
@@ -77,7 +77,7 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 			name: "should remove message from history when receives only the id of the message",
 			fields: fields{
 				conn: s.client,
-				messages: []out.Out{
+				messages: []in.In{
 					{
 						ID:      "1",
 						UserID:  mock.Anything,
@@ -96,11 +96,11 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 				},
 			},
 			args: args{
-				msg: &out.Out{
+				msg: &in.In{
 					ID: "2",
 				},
 			},
-			want: []out.Out{
+			want: []in.In{
 				{
 					ID:      "1",
 					UserID:  mock.Anything,

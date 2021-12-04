@@ -92,7 +92,7 @@ func (r *Server) broadcastMessage(message *model.Message, remote net.Addr) error
 	}
 
 	for _, connection := range r.connections {
-		if connection != remote {
+		if connection.String() != remote.String() {
 			_, err = r.conn.WriteTo(bytes, connection)
 			if err != nil {
 				return err

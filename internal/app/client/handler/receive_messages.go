@@ -3,7 +3,7 @@ package handler
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
 	"log"
 	"os"
 	"os/exec"
@@ -24,16 +24,18 @@ func (r *Client) handleNewMessages() {
 			log.Println(err)
 		}
 
-		r.receiveMessages(msg)
+		if msg != nil {
+			r.receiveMessages(msg)
+		}
 
 	}
 }
 
-func (r *Client) receiveMessages(msg *out.Out) {
+func (r *Client) receiveMessages(msg *in.In) {
 	if r.isDeletedMessage(msg) {
 		r.clearScreen()
 
-		var newMessages []out.Out
+		var newMessages []in.In
 
 		for _, m := range r.messages {
 			if m.ID != strings.TrimSpace(msg.ID) {
@@ -54,12 +56,12 @@ func (r *Client) receiveMessages(msg *out.Out) {
 
 }
 
-func (r *Client) isDeletedMessage(msg *out.Out) bool {
+func (r *Client) isDeletedMessage(msg *in.In) bool {
 	return msg.ID != "" && msg.Message == ""
 }
 
-func (r *Client) unmarshalReceivedMessage(message []byte, rlen int) (*out.Out, error) {
-	req := &out.Out{}
+func (r *Client) unmarshalReceivedMessage(message []byte, rlen int) (*in.In, error) {
+	req := &in.In{}
 	err := json.Unmarshal(message[:rlen], req)
 	if err != nil {
 		return nil, err

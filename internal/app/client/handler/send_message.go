@@ -2,20 +2,20 @@ package handler
 
 import (
 	"encoding/json"
-	in2 "github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
 	"math/rand"
 	"strconv"
 	"time"
 )
 
 func (r *Client) handleSendMessage(action, message string) error {
-	in := &in2.In{
+	msg := &out.Out{
 		ID:      r.generateId(),
 		Action:  action,
 		Message: message,
 	}
 
-	b, err := json.Marshal(in)
+	b, err := json.Marshal(msg)
 	if err != nil {
 		return err
 	}

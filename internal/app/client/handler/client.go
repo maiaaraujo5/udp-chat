@@ -2,7 +2,7 @@ package handler
 
 import (
 	"bufio"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
 	"log"
 	"net"
 	"os"
@@ -18,7 +18,7 @@ const (
 
 type Client struct {
 	conn     *net.UDPConn
-	messages []out.Out
+	messages []in.In
 }
 
 func NewClient(conn *net.UDPConn) *Client {
@@ -47,22 +47,27 @@ func (r *Client) Handle() error {
 		command := strings.TrimSpace(args[0])
 		msg := strings.Join(args[1:], " ")
 
-		switch command {
-		case "/msg":
-			err := r.handleSendMessage(NewMessage, msg)
-			if err != nil {
-				log.Printf("error to send message. please try again. %s", err)
-			}
-		case "/del":
-			err := r.handleDeleteMessage(msg)
-			if err != nil {
-				log.Printf("error to delete message. please try again. %s", err)
-			}
-		case "/quit":
-			err := r.handleSendMessage(Disconnection, "Bye")
-			if err != nil {
-				log.Printf("error to quit room. please try again. %s", err)
-			}
+		r.handleCommands(command, msg)
+
+	}
+}
+
+func (r *Client) handleCommands(command, msg string) {
+	switch command {
+	case "/msg":
+		err := r.handleSendMessage(NewMessage, msg)
+		if err != nil {
+			log.Printf("error to send message. please try again. %s", err)
+		}
+	case "/del":
+		err := r.handleDeleteMessage(msg)
+		if err != nil {
+			log.Printf("error to delete message. please try again. %s", err)
+		}
+	case "/quit":
+		err := r.handleSendMessage(Disconnection, "Bye")
+		if err != nil {
+			log.Printf("error to quit room. please try again. %s", err)
 		}
 	}
 }

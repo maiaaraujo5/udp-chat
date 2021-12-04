@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
 	"github.com/maiaaraujo5/udp-chat/pkg/util"
 	"github.com/stretchr/testify/mock"
 	"net"
@@ -10,7 +10,7 @@ import (
 func (s *ClientSuite) TestClient_handleDeleteMessage() {
 	type fields struct {
 		conn     *net.UDPConn
-		messages []out.Out
+		messages []in.In
 	}
 	type args struct {
 		msg string
@@ -25,7 +25,7 @@ func (s *ClientSuite) TestClient_handleDeleteMessage() {
 			name: "should successfully remove a message from history of messages",
 			fields: fields{
 				conn: util.CreateUdpServer(),
-				messages: []out.Out{
+				messages: []in.In{
 					{
 						ID:      "1847",
 						UserID:  "1",
@@ -52,7 +52,7 @@ func (s *ClientSuite) TestClient_handleDeleteMessage() {
 			name: "should not remove a message from history of messages when client is not the owner of the message",
 			fields: fields{
 				conn: util.CreateUdpServer(),
-				messages: []out.Out{
+				messages: []in.In{
 					{
 						ID:      "1847",
 						UserID:  "1",
