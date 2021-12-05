@@ -1,14 +1,14 @@
 package service
 
 import (
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
-	"github.com/stretchr/testify/mock"
-	"github.com/stretchr/testify/suite"
 	"reflect"
 	"testing"
 	"time"
 
 	"bou.ke/monkey"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
+	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/suite"
 )
 
 type CreateMessageSuite struct {

@@ -3,10 +3,11 @@ package handler
 import (
 	"context"
 	"errors"
+	"net"
+
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/service/mocks"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
 	"github.com/stretchr/testify/mock"
-	"net"
 )
 
 func (s *ServerSuite) TestServer_handleDeleteMessage() {

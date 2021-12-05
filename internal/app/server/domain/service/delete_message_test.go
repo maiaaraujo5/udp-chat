@@ -4,12 +4,13 @@ import (
 	"container/list"
 	"context"
 	"errors"
+	"reflect"
+	"testing"
+
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"reflect"
-	"testing"
 )
 
 type DeleteMessageSuite struct {

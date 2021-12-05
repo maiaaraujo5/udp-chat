@@ -3,9 +3,10 @@ package handler
 import (
 	"context"
 	"errors"
+	"net"
+
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/service/mocks"
 	"github.com/stretchr/testify/mock"
-	"net"
 )
 
 func (s *ServerSuite) TestServer_handleDisconnection() {

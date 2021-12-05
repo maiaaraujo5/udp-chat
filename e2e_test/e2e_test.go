@@ -3,14 +3,14 @@ package e2e_test
 import (
 	"context"
 	"fmt"
+	"net"
+	"testing"
+	"time"
+
 	"github.com/alicebob/miniredis/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/fx/module/runner"
 	"github.com/stretchr/testify/suite"
-	"net"
-	"sync"
-	"testing"
-	"time"
 )
 
 type e2eTestSuite struct {
@@ -39,17 +39,13 @@ func (s *e2eTestSuite) SetupSuite() {
 		DB:   0,
 	})
 
-	var wg sync.WaitGroup
 	go func() {
-		wg.Add(1)
-		defer wg.Done()
 		err := runner.Run()
 		if err != nil {
 			panic(err)
 		}
 	}()
 
-	wg.Wait()
 	time.Sleep(1 * time.Second)
 }
 

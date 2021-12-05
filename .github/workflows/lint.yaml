@@ -1,0 +1,31 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+
+  dependencies:
+    name: download dependencies
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+  golangci:
+    name: lint
+    runs-on: ubuntu-18.04
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: golangci-lint
+        uses: golangci/golangci-lint-action@v2
+        with:
+          version: v1.36

@@ -3,17 +3,17 @@ package dao
 import (
 	"container/list"
 	"context"
+	"reflect"
+	"strings"
+	"testing"
+
+	"github.com/alicebob/miniredis/v2"
 	"github.com/go-redis/redis/v8"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"reflect"
-	"strings"
-	"testing"
-
-	"github.com/alicebob/miniredis/v2"
 )
 
 type DaoSuite struct {

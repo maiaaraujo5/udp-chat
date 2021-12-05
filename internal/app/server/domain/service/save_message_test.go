@@ -1,13 +1,14 @@
 package service
 
 import (
-	"container/list"
-	"context"
-	"errors"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+
+	"container/list"
+	"context"
+	"errors"
 	"reflect"
 	"testing"
 )
@@ -23,7 +24,7 @@ func TestSaveMessageSuite(t *testing.T) {
 func (s *SaveMessageSuite) TestNewSaver() {
 	type args struct {
 		repository *mocks.Repository
-		config     *config
+		config     *Config
 	}
 	tests := []struct {
 		name string
@@ -34,11 +35,11 @@ func (s *SaveMessageSuite) TestNewSaver() {
 			name: "should build NewSaver successfully",
 			args: args{
 				repository: new(mocks.Repository),
-				config:     new(config),
+				config:     new(Config),
 			},
 			want: &saver{
 				repository: new(mocks.Repository),
-				config:     new(config),
+				config:     new(Config),
 			},
 		},
 	}
@@ -54,7 +55,7 @@ func (s *SaveMessageSuite) TestNewSaver() {
 func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 	type fields struct {
 		repository *mocks.Repository
-		config     *config
+		config     *Config
 	}
 	type args struct {
 		ctx     context.Context
@@ -71,7 +72,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			name: "should save message successfully when repository does not have messages",
 			fields: fields{
 				repository: new(mocks.Repository),
-				config: &config{
+				config: &Config{
 					MaxMessagesInHistory: 3,
 				},
 			},
@@ -98,7 +99,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			name: "should successfully save messages in order when repository return one message",
 			fields: fields{
 				repository: new(mocks.Repository),
-				config: &config{
+				config: &Config{
 					MaxMessagesInHistory: 3,
 				},
 			},
@@ -130,7 +131,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			name: "should remove the first message of list when length of the list is in the maximum configured to history and insert the new message in the final",
 			fields: fields{
 				repository: new(mocks.Repository),
-				config: &config{
+				config: &Config{
 					MaxMessagesInHistory: 3,
 				},
 			},
@@ -165,7 +166,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			name: "should return error when repository.List returns error",
 			fields: fields{
 				repository: new(mocks.Repository),
-				config: &config{
+				config: &Config{
 					MaxMessagesInHistory: 3,
 				},
 			},
@@ -186,7 +187,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			name: "should return error when repository.SaveAll returns error",
 			fields: fields{
 				repository: new(mocks.Repository),
-				config: &config{
+				config: &Config{
 					MaxMessagesInHistory: 3,
 				},
 			},

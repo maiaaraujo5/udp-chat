@@ -1,18 +1,19 @@
 package handler
 
 import (
-	"bou.ke/monkey"
 	"errors"
-	in "github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
+	"net"
+	"os"
+	"reflect"
+	"testing"
+
+	"bou.ke/monkey"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service/mocks"
 	"github.com/maiaaraujo5/udp-chat/pkg/util"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"net"
-	"os"
-	"reflect"
-	"testing"
 )
 
 type ClientSuite struct {

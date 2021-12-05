@@ -1,7 +1,6 @@
 package handler
 
 import (
-	in "github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service/mocks"
 	"github.com/stretchr/testify/mock"
@@ -10,9 +9,8 @@ import (
 
 func (s *ClientSuite) TestClient_handleDisconnection() {
 	type fields struct {
-		conn     *net.UDPConn
-		creator  *mocks.Creator
-		messages []in.In
+		conn    *net.UDPConn
+		creator *mocks.Creator
 	}
 	tests := []struct {
 		name    string

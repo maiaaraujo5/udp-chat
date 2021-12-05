@@ -1,11 +1,12 @@
 package service
 
 import (
+	"reflect"
+	"testing"
+
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"reflect"
-	"testing"
 )
 
 type ReceiverSuite struct {

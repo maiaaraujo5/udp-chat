@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
 )

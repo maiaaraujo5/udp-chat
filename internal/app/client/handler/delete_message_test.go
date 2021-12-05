@@ -2,12 +2,13 @@ package handler
 
 import (
 	"errors"
+	"net"
+
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service/mocks"
 	"github.com/maiaaraujo5/udp-chat/pkg/util"
 	"github.com/stretchr/testify/mock"
-	"net"
 )
 
 func (s *ClientSuite) TestClient_handleDeleteMessage() {

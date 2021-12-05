@@ -1,0 +1,36 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+
+  dependencies:
+    name: download dependencies
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+  tests:
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
+
+      - name: Test Server
+        run: make unit-test-server
+
+      - name: Test Client
+        run: make unit-test-client
