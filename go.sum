@@ -327,6 +327,8 @@ github.com/magiconair/properties v1.8.1 h1:ZC2Vc7/ZFkGmsVC9KvOjumD+G5lXy2RtTKyzR
 github.com/magiconair/properties v1.8.1/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
 github.com/maiaaraujo5/gostart v0.0.0-20211122220756-17b5f5b0f7f4 h1:2e6TDknYHJi6nbW9HXO2htUA+4rOr0XMZrnUv9aW8Fg=
 github.com/maiaaraujo5/gostart v0.0.0-20211122220756-17b5f5b0f7f4/go.mod h1:cKnlJu5iUdl2dIieo9iOdn9srW65y5OIiD80aLALyeU=
+github.com/maiaaraujo5/gostart v1.0.0 h1:Xia2e+MrRY35x+Yhjp1LNjMJHrA3poC4Vay2uSfeD4E=
+github.com/maiaaraujo5/gostart v1.0.0/go.mod h1:+wMWwPaIAekM9pycepEwHJr9lXcPx7hKbiEf3TXy9fE=
 github.com/markbates/oncer v0.0.0-20181203154359-bf2de49a0be2/go.mod h1:Ld9puTsIW75CHf65OeIOkyKbteujpZVXDpWK6YGZbxE=
 github.com/markbates/safe v1.0.1/go.mod h1:nAqgmRi7cY2nqMc92/bSEeQA+R4OheNU2T1kNSCBdG0=
 github.com/mattn/go-colorable v0.0.9/go.mod h1:9vuHe8Xs5qXnSaW/c/ABM9alt+Vo+STaOChaDxuIBZU=

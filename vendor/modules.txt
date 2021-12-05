@@ -41,7 +41,7 @@ github.com/hashicorp/hcl/json/scanner
 github.com/hashicorp/hcl/json/token
 # github.com/magiconair/properties v1.8.1
 github.com/magiconair/properties
-# github.com/maiaaraujo5/gostart v0.0.0-20211122220756-17b5f5b0f7f4 => ../gostart
+# github.com/maiaaraujo5/gostart v1.0.0
 ## explicit
 github.com/maiaaraujo5/gostart/application/config
 github.com/maiaaraujo5/gostart/cache/redis
@@ -121,4 +121,3 @@ gopkg.in/ini.v1
 gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
 gopkg.in/yaml.v3
-# github.com/maiaaraujo5/gostart => ../gostart
