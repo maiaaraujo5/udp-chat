@@ -1,9 +1,8 @@
 package service
 
 import (
-	"strings"
-
 	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
+	"github.com/maiaaraujo5/udp-chat/pkg/util"
 )
 
 type Receiver interface {
@@ -18,7 +17,7 @@ func NewReceiver() Receiver {
 
 func (r *receiver) Receive(messages []in.In, message *in.In) []in.In {
 	if r.isDeletedMessage(message) {
-		return r.removeMessageFromMessages(messages, message.ID)
+		return util.RemoveMessageFromMessages(messages, message.ID)
 	}
 
 	messages = append(messages, *message)
@@ -27,17 +26,4 @@ func (r *receiver) Receive(messages []in.In, message *in.In) []in.In {
 
 func (r *receiver) isDeletedMessage(msg *in.In) bool {
 	return msg.ID != "" && msg.Message == ""
-}
-
-func (r *receiver) removeMessageFromMessages(messages []in.In, messageID string) []in.In {
-	var newMessages []in.In
-
-	for _, msg := range messages {
-
-		if !strings.EqualFold(msg.ID, messageID) {
-			newMessages = append(newMessages, msg)
-		}
-	}
-
-	return newMessages
 }

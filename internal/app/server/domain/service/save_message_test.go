@@ -86,7 +86,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			},
 			wantErr: false,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(list.New(), nil).Once()
+				repository.On("FindAll", mock.Anything).Return(list.New(), nil).Once()
 
 				repository.On("SaveAll", mock.Anything, func() *list.List {
 					l := list.New()
@@ -113,7 +113,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			},
 			wantErr: false,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					return l
@@ -145,7 +145,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			},
 			wantErr: false,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					l.PushBack(model.Message{ID: "2", UserID: mock.Anything, Message: mock.Anything})
@@ -180,7 +180,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			},
 			wantErr: true,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(nil, errors.New("error to return list")).Once()
+				repository.On("FindAll", mock.Anything).Return(nil, errors.New("error to return list")).Once()
 			},
 		},
 		{
@@ -201,7 +201,7 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 			},
 			wantErr: true,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					return l

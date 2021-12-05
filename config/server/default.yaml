@@ -1,6 +1,8 @@
 gostart:
   app:
     name: udp-chat-server
+  zerolog:
+    level: info
   udp:
     server:
       port: 3000

@@ -173,7 +173,7 @@ func (s *DaoSuite) TestRedis_List() {
 				client: tt.fields.client,
 				config: tt.fields.config,
 			}
-			got, err := r.List(tt.args.parentCtx)
+			got, err := r.FindAll(tt.args.parentCtx)
 			s.Assert().True((err != nil) == tt.wantErr, "List() error = %v, wantErr %v", err, tt.wantErr)
 			s.Assert().True(reflect.DeepEqual(got, tt.want), "List() got = %v, want %v", got, tt.want)
 		})

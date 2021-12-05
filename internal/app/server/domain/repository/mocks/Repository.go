@@ -14,22 +14,8 @@ type Repository struct {
 	mock.Mock
 }
 
-// Flush provides a mock function with given fields: parentCtx
-func (_m *Repository) Flush(parentCtx context.Context) error {
-	ret := _m.Called(parentCtx)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
-		r0 = rf(parentCtx)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
-// List provides a mock function with given fields: parentCtx
-func (_m *Repository) List(parentCtx context.Context) (*list.List, error) {
+// FindAll provides a mock function with given fields: parentCtx
+func (_m *Repository) FindAll(parentCtx context.Context) (*list.List, error) {
 	ret := _m.Called(parentCtx)
 
 	var r0 *list.List
@@ -49,6 +35,20 @@ func (_m *Repository) List(parentCtx context.Context) (*list.List, error) {
 	}
 
 	return r0, r1
+}
+
+// Flush provides a mock function with given fields: parentCtx
+func (_m *Repository) Flush(parentCtx context.Context) error {
+	ret := _m.Called(parentCtx)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(context.Context) error); ok {
+		r0 = rf(parentCtx)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // SaveAll provides a mock function with given fields: parentCtx, messages

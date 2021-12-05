@@ -28,7 +28,7 @@ func NewSaver(repository repository.Repository, config *Config) Saver {
 func (r *saver) Save(ctx context.Context, message *model.Message) error {
 
 	logger.Debug("recovering history of messages")
-	messages, err := r.repository.List(ctx)
+	messages, err := r.repository.FindAll(ctx)
 	if err != nil {
 		return err
 	}

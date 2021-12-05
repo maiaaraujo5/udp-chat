@@ -86,7 +86,7 @@ func (s *RecoverMessageSuite) TestRecoverImpl_Execute() {
 			},
 			wantErr: false,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					l.PushBack(model.Message{ID: "2", UserID: mock.Anything, Message: mock.Anything})
@@ -105,7 +105,7 @@ func (s *RecoverMessageSuite) TestRecoverImpl_Execute() {
 			want:    nil,
 			wantErr: true,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(nil, errors.New("error to return messages"))
+				repository.On("FindAll", mock.Anything).Return(nil, errors.New("error to return messages"))
 			},
 		},
 	}

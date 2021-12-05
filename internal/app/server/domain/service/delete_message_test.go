@@ -78,7 +78,7 @@ func (s *DeleteMessageSuite) Testdeleter_Execute() {
 			},
 			wantErr: false,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					l.PushBack(model.Message{ID: "2", UserID: "user_id", Message: mock.Anything})
@@ -108,7 +108,7 @@ func (s *DeleteMessageSuite) Testdeleter_Execute() {
 			},
 			wantErr: false,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					l.PushBack(model.Message{ID: "2", UserID: "user_id", Message: mock.Anything})
@@ -131,7 +131,7 @@ func (s *DeleteMessageSuite) Testdeleter_Execute() {
 			},
 			wantErr: true,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(nil, errors.New("error to recover messages"))
+				repository.On("FindAll", mock.Anything).Return(nil, errors.New("error to recover messages"))
 			},
 		},
 		{
@@ -148,7 +148,7 @@ func (s *DeleteMessageSuite) Testdeleter_Execute() {
 			},
 			wantErr: true,
 			mock: func(repository *mocks.Repository) {
-				repository.On("List", mock.Anything).Return(func() *list.List {
+				repository.On("FindAll", mock.Anything).Return(func() *list.List {
 					l := list.New()
 					l.PushBack(model.Message{ID: "1", UserID: mock.Anything, Message: mock.Anything})
 					l.PushBack(model.Message{ID: "2", UserID: "user_id", Message: mock.Anything})

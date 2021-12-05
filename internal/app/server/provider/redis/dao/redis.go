@@ -53,7 +53,7 @@ func (r *Redis) SaveAll(parentCtx context.Context, messages *list.List) error {
 	return nil
 }
 
-func (r *Redis) List(parentCtx context.Context) (*list.List, error) {
+func (r *Redis) FindAll(parentCtx context.Context) (*list.List, error) {
 
 	messages := list.New()
 	logger.Trace("recovering messages from redis")

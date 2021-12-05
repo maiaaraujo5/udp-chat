@@ -26,7 +26,7 @@ func NewDelete(repository repository.Repository) Deleter {
 
 func (d *deleter) Delete(parentCtx context.Context, message *model.Message) error {
 	logger.Debug("recovering messages from repository")
-	messages, err := d.repository.List(parentCtx)
+	messages, err := d.repository.FindAll(parentCtx)
 	if err != nil {
 		return err
 	}

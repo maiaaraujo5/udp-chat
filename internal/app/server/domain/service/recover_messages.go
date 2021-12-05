@@ -27,7 +27,7 @@ func (r *recoverImpl) Recover(ctx context.Context) ([]model.Message, error) {
 	var messages []model.Message
 
 	logger.Debug("recovering messages from repository")
-	list, err := r.repository.List(ctx)
+	list, err := r.repository.FindAll(ctx)
 	if err != nil {
 		return nil, err
 	}
