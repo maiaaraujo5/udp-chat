@@ -1,3 +1,6 @@
+[![Tests](https://github.com/maiaaraujo5/udp-chat/actions/workflows/test.yaml/badge.svg)](https://github.com/maiaaraujo5/udp-chat/actions/workflows/test.yaml)
+[![Lint](https://github.com/maiaaraujo5/udp-chat/actions/workflows/lint.yaml/badge.svg)](https://github.com/maiaaraujo5/udp-chat/actions/workflows/lint.yaml)
+
 # *UDP CHAT*
 
 # *Dependencies*
