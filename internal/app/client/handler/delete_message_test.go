@@ -1,7 +1,10 @@
 package handler
 
 import (
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
+	"errors"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service/mocks"
 	"github.com/maiaaraujo5/udp-chat/pkg/util"
 	"github.com/stretchr/testify/mock"
 	"net"
@@ -11,6 +14,8 @@ func (s *ClientSuite) TestClient_handleDeleteMessage() {
 	type fields struct {
 		conn     *net.UDPConn
 		messages []in.In
+		deleter  *mocks.Deleter
+		creator  *mocks.Creator
 	}
 	type args struct {
 		msg string
@@ -20,72 +25,107 @@ func (s *ClientSuite) TestClient_handleDeleteMessage() {
 		fields  fields
 		args    args
 		wantErr bool
+		mock    func(deleter *mocks.Deleter, creator *mocks.Creator)
 	}{
 		{
 			name: "should successfully remove a message from history of messages",
 			fields: fields{
-				conn: util.CreateUdpServer(),
+				conn:    util.CreateUdpServer(),
+				deleter: new(mocks.Deleter),
+				creator: new(mocks.Creator),
 				messages: []in.In{
 					{
-						ID:      "1847",
-						UserID:  "1",
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
 					{
-						ID:      "1848",
-						UserID:  s.client.LocalAddr().String(),
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
 					{
-						ID:      "1849",
-						UserID:  "3",
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
 				},
 			},
 			args: args{
-				msg: "1848",
+				msg: mock.Anything,
 			},
 			wantErr: false,
+			mock: func(deleter *mocks.Deleter, creator *mocks.Creator) {
+				deleter.On("Delete", mock.Anything, mock.Anything, mock.Anything).Return([]in.In{
+					{
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
+						Message: mock.Anything,
+					},
+					{
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
+						Message: mock.Anything,
+					},
+				}, nil).Once()
+
+				creator.On("Create", mock.Anything, mock.Anything).Return(&out.Out{
+					ID:      mock.Anything,
+					Action:  mock.Anything,
+					Message: mock.Anything,
+				}).Once()
+			},
 		},
 		{
-			name: "should not remove a message from history of messages when client is not the owner of the message",
+			name: "should not return error when deleter returns error and not send message to server to delete message",
 			fields: fields{
-				conn: util.CreateUdpServer(),
+				conn:    util.CreateUdpServer(),
+				deleter: new(mocks.Deleter),
+				creator: new(mocks.Creator),
 				messages: []in.In{
 					{
-						ID:      "1847",
-						UserID:  "1",
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
 					{
-						ID:      "1848",
-						UserID:  s.client.LocalAddr().String(),
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
 					{
-						ID:      "1849",
-						UserID:  "3",
+						ID:      mock.Anything,
+						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
 				},
 			},
 			args: args{
-				msg: "1847",
+				msg: mock.Anything,
 			},
 			wantErr: true,
+			mock: func(deleter *mocks.Deleter, creator *mocks.Creator) {
+				deleter.On("Delete", mock.Anything, mock.Anything, mock.Anything).Return(nil, errors.New("error")).Once()
+			},
 		},
 	}
 	for _, tt := range tests {
 		s.Run(tt.name, func() {
+
+			tt.mock(tt.fields.deleter, tt.fields.creator)
+
 			r := &Client{
 				conn:     s.client,
 				messages: tt.fields.messages,
+				deleter:  tt.fields.deleter,
+				creator:  tt.fields.creator,
 			}
 
 			err := r.handleDeleteMessage(tt.args.msg)
 
-			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
+			s.Assert().True((err != nil) == tt.wantErr, "handleDeleteMessage() error = %v, wantErr %v", err, tt.wantErr)
+
+			tt.fields.deleter.AssertExpectations(s.T())
 		})
 	}
 }

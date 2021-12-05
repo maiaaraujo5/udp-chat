@@ -2,20 +2,16 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/out"
-	"math/rand"
-	"strconv"
-	"time"
+	"strings"
+
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 )
 
 func (r *Client) handleSendMessage(action, message string) error {
-	msg := &out.Out{
-		ID:      r.generateId(),
-		Action:  action,
-		Message: message,
-	}
 
-	b, err := json.Marshal(msg)
+	out := r.creator.Create(action, message)
+
+	b, err := json.Marshal(out)
 	if err != nil {
 		return err
 	}
@@ -25,11 +21,15 @@ func (r *Client) handleSendMessage(action, message string) error {
 		return err
 	}
 
-	return nil
-}
+	if strings.EqualFold(action, NewMessage) {
+		r.messages = append(r.messages, in.In{
+			ID:      out.ID,
+			UserID:  r.conn.LocalAddr().String(),
+			Message: out.Message,
+		})
+	}
 
-func (r *Client) generateId() string {
-	rand.Seed(time.Now().Unix())
-	number := rand.Intn(9999)
-	return strconv.Itoa(number)
+	r.print()
+
+	return nil
 }

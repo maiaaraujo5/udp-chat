@@ -1,15 +1,18 @@
 package handler
 
 import (
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler/model/in"
-	"github.com/stretchr/testify/mock"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service/mocks"
 	"net"
 	"reflect"
+
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
+	"github.com/stretchr/testify/mock"
 )
 
 func (s *ClientSuite) TestClient_receiveMessages() {
 	type fields struct {
 		conn     *net.UDPConn
+		receiver *mocks.Receiver
 		messages []in.In
 	}
 	type args struct {
@@ -20,11 +23,13 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 		fields fields
 		args   args
 		want   []in.In
+		mock   func(receiver *mocks.Receiver)
 	}{
 		{
-			name: "should successfully receive one new message and append in the history when history is nil",
+			name: "should successfully receive a new message",
 			fields: fields{
-				conn: s.client,
+				conn:     s.client,
+				receiver: new(mocks.Receiver),
 			},
 			args: args{
 				msg: &in.In{
@@ -40,89 +45,32 @@ func (s *ClientSuite) TestClient_receiveMessages() {
 					Message: mock.Anything,
 				},
 			},
-		},
-		{
-			name: "should successfully receive one new message and append in the history when history is not empty",
-			fields: fields{
-				conn: s.client,
-				messages: []in.In{
+			mock: func(receiver *mocks.Receiver) {
+				receiver.On("Receive", mock.Anything, mock.Anything).Return([]in.In{
 					{
-						ID:      "1",
+						ID:      mock.Anything,
 						UserID:  mock.Anything,
 						Message: mock.Anything,
 					},
-				},
-			},
-			args: args{
-				msg: &in.In{
-					ID:      "2",
-					UserID:  mock.Anything,
-					Message: mock.Anything,
-				},
-			},
-			want: []in.In{
-				{
-					ID:      "1",
-					UserID:  mock.Anything,
-					Message: mock.Anything,
-				},
-				{
-					ID:      "2",
-					UserID:  mock.Anything,
-					Message: mock.Anything,
-				},
-			},
-		},
-		{
-			name: "should remove message from history when receives only the id of the message",
-			fields: fields{
-				conn: s.client,
-				messages: []in.In{
-					{
-						ID:      "1",
-						UserID:  mock.Anything,
-						Message: mock.Anything,
-					},
-					{
-						ID:      "2",
-						UserID:  mock.Anything,
-						Message: mock.Anything,
-					},
-					{
-						ID:      "3",
-						UserID:  mock.Anything,
-						Message: mock.Anything,
-					},
-				},
-			},
-			args: args{
-				msg: &in.In{
-					ID: "2",
-				},
-			},
-			want: []in.In{
-				{
-					ID:      "1",
-					UserID:  mock.Anything,
-					Message: mock.Anything,
-				},
-				{
-					ID:      "3",
-					UserID:  mock.Anything,
-					Message: mock.Anything,
-				},
+				})
 			},
 		},
 	}
 	for _, tt := range tests {
 		s.Run(tt.name, func() {
+
+			tt.mock(tt.fields.receiver)
+
 			r := &Client{
 				conn:     tt.fields.conn,
 				messages: tt.fields.messages,
+				receiver: tt.fields.receiver,
 			}
 
-			r.receiveMessages(tt.args.msg)
+			r.receiveMessage(tt.args.msg)
 			s.Assert().True(reflect.DeepEqual(r.messages, tt.want), "NewClient() = %v, want %v", r.messages, tt.want)
+
+			tt.fields.receiver.AssertExpectations(s.T())
 		})
 	}
 }
