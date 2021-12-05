@@ -1,0 +1,16 @@
+gostart:
+  app:
+    name: udp-chat-server
+  udp:
+    server:
+      port: 3500
+  redis:
+    addr: localhost:6378
+    db: 1
+
+app:
+  service:
+    maxmessagesinhistory: 20
+  provider:
+    redis:
+      key: messages

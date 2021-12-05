@@ -11,7 +11,7 @@ lint:
 	golangci-lint run ./... --config ./build/golangci-lint/config.yml
 
 docker-compose-run-redis:
-		cd ./build && docker-compose up -d
+		cd ./build/docker-compose && docker-compose up -d
 
 build-server:
 		go mod vendor
@@ -30,3 +30,10 @@ run-server:
 
 run-client:
 		CONF=./config/client/development.yaml go run cmd/chat/client/main.go
+
+docker-run-server: build-server
+		cp ./build/dockerfile/Dockerfile ./dist/server/
+		cd ./dist/server/;docker build -t maiaaraujo5/udp-chat-server:latest .
+		docker run -e CONF=./default.yaml,./development.yaml --rm -d --network host maiaaraujo5/udp-chat-server:latest
+
+docker-run-server-with-redis: docker-compose-run-redis docker-run-server

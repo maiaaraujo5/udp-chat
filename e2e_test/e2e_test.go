@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"os"
 	"testing"
 	"time"
 
@@ -29,18 +30,23 @@ func (s *e2eTestSuite) SetupSuite() {
 		panic(err)
 	}
 
-	err = mr.StartAddr("127.0.0.1:6379")
+	err = mr.StartAddr("127.0.0.1:6378")
 	if err != nil {
 		panic(err)
 	}
 
 	s.redis = redis.NewClient(&redis.Options{
-		Addr: "127.0.0.1:6379",
-		DB:   0,
+		Addr: "127.0.0.1:6378",
+		DB:   1,
 	})
 
 	go func() {
-		err := runner.Run()
+		err := os.Setenv("CONF", "../config/server/tests.yaml")
+		if err != nil {
+			panic(err)
+		}
+
+		err = runner.Run()
 		if err != nil {
 			panic(err)
 		}
@@ -53,7 +59,7 @@ func (s *e2eTestSuite) SetupTest() {
 	err := s.redis.FlushDB(context.Background()).Err()
 	s.Assert().NoError(err)
 
-	addr, err := net.ResolveUDPAddr("udp", "0.0.0.0:3000")
+	addr, err := net.ResolveUDPAddr("udp", "0.0.0.0:3500")
 	s.Assert().NoError(err)
 
 	conn, err := net.DialUDP("udp", nil, addr)

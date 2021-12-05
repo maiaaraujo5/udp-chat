@@ -19,16 +19,28 @@
 # *Technical Decisions*
 * Uses the `container/list` to bring performance to the operations like delete a message from history in server
 * Redis is not a strong dependency, if something bad happens to redis the chat would continue working.
-* Don't use redis specific functions like Ltrim to maintain the history size so as not to create a coupling between the provider and the service.
+* The datatype store in redis is a List
+* The value store in redis is composed by {id}-{user_id}-{message}. Eg: 123-127.0.0.1-Hello!
+
 # *How to Run The Application*
  ## Server:
-  To run the server we have two ways:
+  To run the server we have some ways:
+
+  **Note:** All the commands describes below looks for configuration in **default.yaml** and **development.yaml** if you want to alter some configs alter in this yamls or alter the command to search the config in another yaml
 
  ### make run-server-with-redis:
  Use this command if you don't have one instance of redis. This command will run one docker-compose to up one instance of redis and run the application
 
  ### make run-server:
- Use this command if you have one instance of redis. To use your redis instance change the configuration in configs/development.yaml
+ Use this command if you have one instance of redis. To use your redis instance change the configuration in **config/server/development.yaml**
+
+ ### make docker-run-server-with-redis:
+ Use this command if you want to run the server with docker, and you don't have one instance of redis. This command will run one docker-compose to up one instance of redis, build the server application, create and run the docker image of server
+
+ ### make docker-run-server:
+ Use this command if you have one instance of redis and want to run the server with docker. This command will create and run one docker image of server. To use your redis instance don't forget to change the config in **config/server/development.yaml**
+
+ **Note:** Alter the redis configuration before run this command.
 
 ## Client:
 To run the client use this command **make run-client**
@@ -44,6 +56,44 @@ Use this command to send new messages for the server. Eg:
 ``/del 123``
  
 * **/quit** Use this command to leave the room
+
+# *Makefile commands*
+
+## make unit-test-server:
+* This command will run the unit tests of server
+
+## make unit-test-client:
+* This command will run the unit tests of client
+
+## make end-to-end-tests:
+* This command will run the end-to-end tests
+
+## make lint:
+* This command will run the linters configured. You can see the config in **./build/golangci-lint/config.yml**
+
+## make docker-compose-run-redis:
+* This command will run one instance of redis in your machine using docker-compose.
+
+## make build-server:
+* This command will create a server executable extension in **./dist/server**
+
+## make build-client:
+* This command will create a client executable extension in **./dist/client**
+
+## make run-server-with-redis:
+* This command will run one instance of redis in your machine using docker-compose and run the server application using go
+
+## make run-server:
+* This command will run the server application using go
+
+## make run-client:
+* This command will run the client application using go
+
+## make docker-run-server:
+* This command will create and run a docker image for the server application.
+
+## make docker-run-server-with-redis:
+* This command will create and run a docker image for the server application, and run one instance of redis in your machine using docker-compose
 
 
 # *Libraries*
