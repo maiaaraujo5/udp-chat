@@ -21,7 +21,7 @@ func (r *Server) handleDisconnection(parentCtx context.Context, remote net.Addr)
 	}
 
 	if !r.thereAreStillActiveConnections() {
-		err := r.flusher.Execute(parentCtx)
+		err := r.flusher.Flush(parentCtx)
 		if err != nil {
 			return err
 		}
@@ -29,7 +29,7 @@ func (r *Server) handleDisconnection(parentCtx context.Context, remote net.Addr)
 		return nil
 	}
 
-	err := r.saveMessage.Execute(parentCtx, message)
+	err := r.saveMessage.Save(parentCtx, message)
 	if err != nil {
 		return err
 	}

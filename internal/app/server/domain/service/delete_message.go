@@ -9,21 +9,21 @@ import (
 	"strings"
 )
 
-type DeleteMessage interface {
-	Execute(parentCtx context.Context, message *model.Message) error
+type Deleter interface {
+	Delete(parentCtx context.Context, message *model.Message) error
 }
 
-type DeleteImpl struct {
+type deleter struct {
 	repository repository.Repository
 }
 
-func NewDelete(repository repository.Repository) DeleteMessage {
-	return &DeleteImpl{
+func NewDelete(repository repository.Repository) Deleter {
+	return &deleter{
 		repository: repository,
 	}
 }
 
-func (d *DeleteImpl) Execute(parentCtx context.Context, message *model.Message) error {
+func (d *deleter) Delete(parentCtx context.Context, message *model.Message) error {
 	logger.Debug("recovering messages from repository")
 	messages, err := d.repository.List(parentCtx)
 	if err != nil {
@@ -49,7 +49,7 @@ func (d *DeleteImpl) Execute(parentCtx context.Context, message *model.Message) 
 	return nil
 }
 
-func (d *DeleteImpl) findMessageInList(list *list.List, message *model.Message) *list.Element {
+func (d *deleter) findMessageInList(list *list.List, message *model.Message) *list.Element {
 	for element := list.Front(); element != nil; element = element.Next() {
 		m := element.Value.(model.Message)
 

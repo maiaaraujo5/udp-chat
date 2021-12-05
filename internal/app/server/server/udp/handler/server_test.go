@@ -38,7 +38,7 @@ func (s *ServerSuite) TestNewServer() {
 	type args struct {
 		messageRecover *mocks.Recover
 		saver          *mocks.Saver
-		deleteMessage  *mocks.DeleteMessage
+		deleteMessage  *mocks.Deleter
 		flusher        *mocks.Flusher
 		conn           *net.UDPConn
 	}
@@ -52,7 +52,7 @@ func (s *ServerSuite) TestNewServer() {
 			args: args{
 				messageRecover: new(mocks.Recover),
 				saver:          new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 				conn:           s.conn,
 			},
@@ -60,7 +60,7 @@ func (s *ServerSuite) TestNewServer() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 				conn:           s.conn,
 			},
@@ -80,7 +80,7 @@ func (s *ServerSuite) TestServer_handle() {
 		connections    map[string]net.Addr
 		messageRecover *mocks.Recover
 		saveMessage    *mocks.Saver
-		deleteMessage  *mocks.DeleteMessage
+		deleteMessage  *mocks.Deleter
 		flusher        *mocks.Flusher
 	}
 	type args struct {
@@ -93,7 +93,7 @@ func (s *ServerSuite) TestServer_handle() {
 		fields  fields
 		args    args
 		wantErr bool
-		mock    func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher)
+		mock    func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher)
 	}{
 		{
 			name: "should successfully handle a new connection",
@@ -101,7 +101,7 @@ func (s *ServerSuite) TestServer_handle() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -117,8 +117,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: false,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				recover.On("Execute", mock.Anything).Return([]model.Message{
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				recover.On("Recover", mock.Anything).Return([]model.Message{
 					{
 						ID:      mock.Anything,
 						UserID:  mock.Anything,
@@ -126,7 +126,7 @@ func (s *ServerSuite) TestServer_handle() {
 					},
 				}, nil).Once()
 
-				saver.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -135,7 +135,7 @@ func (s *ServerSuite) TestServer_handle() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -151,8 +151,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: true,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				recover.On("Execute", mock.Anything).Return(nil, errors.New("error to recover messages")).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				recover.On("Recover", mock.Anything).Return(nil, errors.New("error to recover messages")).Once()
 			},
 		},
 		{
@@ -161,7 +161,7 @@ func (s *ServerSuite) TestServer_handle() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -177,8 +177,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: false,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				saver.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				saver.On("Save", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -187,7 +187,7 @@ func (s *ServerSuite) TestServer_handle() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -203,8 +203,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: true,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				saver.On("Execute", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				saver.On("Save", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
 			},
 		},
 		{
@@ -213,7 +213,7 @@ func (s *ServerSuite) TestServer_handle() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -229,8 +229,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: false,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				deleter.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				deleter.On("Delete", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -239,7 +239,7 @@ func (s *ServerSuite) TestServer_handle() {
 				connections:    make(map[string]net.Addr),
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -255,8 +255,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: true,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				deleter.On("Execute", mock.Anything, mock.Anything).Return(errors.New("error to delete message")).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				deleter.On("Delete", mock.Anything, mock.Anything).Return(errors.New("error to delete message")).Once()
 			},
 		},
 		{
@@ -267,7 +267,7 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -283,8 +283,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: false,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				flusher.On("Execute", mock.Anything).Return(nil).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				flusher.On("Flush", mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -295,7 +295,7 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 				messageRecover: new(mocks.Recover),
 				saveMessage:    new(mocks.Saver),
-				deleteMessage:  new(mocks.DeleteMessage),
+				deleteMessage:  new(mocks.Deleter),
 				flusher:        new(mocks.Flusher),
 			},
 			args: args{
@@ -311,8 +311,8 @@ func (s *ServerSuite) TestServer_handle() {
 				},
 			},
 			wantErr: true,
-			mock: func(recover *mocks.Recover, deleter *mocks.DeleteMessage, saver *mocks.Saver, flusher *mocks.Flusher) {
-				flusher.On("Execute", mock.Anything).Return(errors.New("error to flush")).Once()
+			mock: func(recover *mocks.Recover, deleter *mocks.Deleter, saver *mocks.Saver, flusher *mocks.Flusher) {
+				flusher.On("Flush", mock.Anything).Return(errors.New("error to flush")).Once()
 			},
 		},
 	}

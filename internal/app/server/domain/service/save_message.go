@@ -9,22 +9,22 @@ import (
 )
 
 type Saver interface {
-	Execute(ctx context.Context, message *model.Message) error
+	Save(ctx context.Context, message *model.Message) error
 }
 
-type SaverImpl struct {
+type saver struct {
 	repository repository.Repository
 	config     *config
 }
 
 func NewSaver(repository repository.Repository, config *config) Saver {
-	return &SaverImpl{
+	return &saver{
 		repository: repository,
 		config:     config,
 	}
 }
 
-func (r *SaverImpl) Execute(ctx context.Context, message *model.Message) error {
+func (r *saver) Save(ctx context.Context, message *model.Message) error {
 
 	logger.Debug("recovering history of messages")
 	messages, err := r.repository.List(ctx)

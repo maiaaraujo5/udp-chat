@@ -34,7 +34,7 @@ func (s *RecoverMessageSuite) TestNewRecover() {
 			args: args{
 				repository: new(mocks.Repository),
 			},
-			want: &RecoverImpl{
+			want: &recoverImpl{
 				repository: new(mocks.Repository),
 			},
 		},
@@ -113,11 +113,11 @@ func (s *RecoverMessageSuite) TestRecoverImpl_Execute() {
 
 			tt.mock(tt.fields.repository)
 
-			r := &RecoverImpl{
+			r := &recoverImpl{
 				repository: tt.fields.repository,
 			}
 
-			got, err := r.Execute(tt.args.ctx)
+			got, err := r.Recover(tt.args.ctx)
 			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
 			s.Assert().True(reflect.DeepEqual(got, tt.want), "Execute() = %v, want %v", got, tt.want)
 

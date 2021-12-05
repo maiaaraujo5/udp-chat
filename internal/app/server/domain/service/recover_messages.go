@@ -8,20 +8,20 @@ import (
 )
 
 type Recover interface {
-	Execute(ctx context.Context) ([]model.Message, error)
+	Recover(ctx context.Context) ([]model.Message, error)
 }
 
-type RecoverImpl struct {
+type recoverImpl struct {
 	repository repository.Repository
 }
 
 func NewRecover(repository repository.Repository) Recover {
-	return &RecoverImpl{
+	return &recoverImpl{
 		repository: repository,
 	}
 }
 
-func (r *RecoverImpl) Execute(ctx context.Context) ([]model.Message, error) {
+func (r *recoverImpl) Recover(ctx context.Context) ([]model.Message, error) {
 
 	var messages []model.Message
 

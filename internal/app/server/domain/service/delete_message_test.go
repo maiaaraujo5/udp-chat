@@ -27,14 +27,14 @@ func (s *DeleteMessageSuite) TestNewDelete() {
 	tests := []struct {
 		name string
 		args args
-		want DeleteMessage
+		want Deleter
 	}{
 		{
 			name: "should build NewDelete successfully",
 			args: args{
 				repository: new(mocks.Repository),
 			},
-			want: &DeleteImpl{
+			want: &deleter{
 				repository: new(mocks.Repository),
 			},
 		},
@@ -48,7 +48,7 @@ func (s *DeleteMessageSuite) TestNewDelete() {
 	}
 }
 
-func (s *DeleteMessageSuite) TestDeleteImpl_Execute() {
+func (s *DeleteMessageSuite) Testdeleter_Execute() {
 	type fields struct {
 		repository *mocks.Repository
 	}
@@ -169,11 +169,11 @@ func (s *DeleteMessageSuite) TestDeleteImpl_Execute() {
 
 			tt.mock(tt.fields.repository)
 
-			d := &DeleteImpl{
+			d := &deleter{
 				repository: tt.fields.repository,
 			}
 
-			err := d.Execute(tt.args.parentCtx, tt.args.message)
+			err := d.Delete(tt.args.parentCtx, tt.args.message)
 			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.repository.AssertExpectations(s.T())

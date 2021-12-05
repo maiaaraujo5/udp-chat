@@ -44,7 +44,7 @@ func (s *ServerSuite) TestServer_handleDisconnection() {
 			},
 			wantErr: false,
 			mock: func(flusher *mocks.Flusher, saver *mocks.Saver) {
-				saver.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -65,7 +65,7 @@ func (s *ServerSuite) TestServer_handleDisconnection() {
 			},
 			wantErr: false,
 			mock: func(flusher *mocks.Flusher, saver *mocks.Saver) {
-				flusher.On("Execute", mock.Anything).Return(nil).Once()
+				flusher.On("Flush", mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -87,7 +87,7 @@ func (s *ServerSuite) TestServer_handleDisconnection() {
 			},
 			wantErr: true,
 			mock: func(flusher *mocks.Flusher, saver *mocks.Saver) {
-				saver.On("Execute", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
 			},
 		},
 		{
@@ -108,7 +108,7 @@ func (s *ServerSuite) TestServer_handleDisconnection() {
 			},
 			wantErr: true,
 			mock: func(flusher *mocks.Flusher, saver *mocks.Saver) {
-				flusher.On("Execute", mock.Anything).Return(errors.New("error to flusher")).Once()
+				flusher.On("Flush", mock.Anything).Return(errors.New("error to flusher")).Once()
 			},
 		},
 	}
@@ -125,7 +125,7 @@ func (s *ServerSuite) TestServer_handleDisconnection() {
 			}
 
 			err := r.handleDisconnection(tt.args.parentCtx, tt.args.remote)
-			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
+			s.Assert().True((err != nil) == tt.wantErr, "handleDisconnection() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.flusher.AssertExpectations(s.T())
 			tt.fields.saver.AssertExpectations(s.T())

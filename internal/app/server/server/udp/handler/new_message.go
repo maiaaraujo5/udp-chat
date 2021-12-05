@@ -23,7 +23,7 @@ func (r *Server) handleNewMessage(parentCtx context.Context, in *in.In, remote n
 		return err
 	}
 
-	err = r.saveMessage.Execute(parentCtx, message)
+	err = r.saveMessage.Save(parentCtx, message)
 	if err != nil {
 		return err
 	}

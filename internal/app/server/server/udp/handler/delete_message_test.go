@@ -12,7 +12,7 @@ import (
 func (s *ServerSuite) TestServer_handleDeleteMessage() {
 	type fields struct {
 		connections   map[string]net.Addr
-		deleteMessage *mocks.DeleteMessage
+		deleteMessage *mocks.Deleter
 	}
 	type args struct {
 		parentCtx context.Context
@@ -24,12 +24,12 @@ func (s *ServerSuite) TestServer_handleDeleteMessage() {
 		fields  fields
 		args    args
 		wantErr bool
-		mock    func(service *mocks.DeleteMessage)
+		mock    func(service *mocks.Deleter)
 	}{
 		{
 			name: "should successfully delete one message",
 			fields: fields{
-				deleteMessage: new(mocks.DeleteMessage),
+				deleteMessage: new(mocks.Deleter),
 				connections: map[string]net.Addr{
 					":3515": &net.UDPAddr{IP: net.IP{}, Port: 3515},
 					":3516": &net.UDPAddr{IP: net.IP{}, Port: 3516},
@@ -48,14 +48,14 @@ func (s *ServerSuite) TestServer_handleDeleteMessage() {
 				},
 			},
 			wantErr: false,
-			mock: func(service *mocks.DeleteMessage) {
-				service.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+			mock: func(service *mocks.Deleter) {
+				service.On("Delete", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
 			name: "should return error when service return errors",
 			fields: fields{
-				deleteMessage: new(mocks.DeleteMessage),
+				deleteMessage: new(mocks.Deleter),
 			},
 			args: args{
 				parentCtx: context.Background(),
@@ -66,8 +66,8 @@ func (s *ServerSuite) TestServer_handleDeleteMessage() {
 				},
 			},
 			wantErr: true,
-			mock: func(service *mocks.DeleteMessage) {
-				service.On("Execute", mock.Anything, mock.Anything).Return(errors.New("error to delete message"))
+			mock: func(service *mocks.Deleter) {
+				service.On("Delete", mock.Anything, mock.Anything).Return(errors.New("error to delete message"))
 			},
 		},
 	}
@@ -82,7 +82,7 @@ func (s *ServerSuite) TestServer_handleDeleteMessage() {
 			}
 
 			err := r.handleDeleteMessage(tt.args.parentCtx, tt.args.in, tt.args.remote)
-			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
+			s.Assert().True((err != nil) == tt.wantErr, "Delete() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.deleteMessage.AssertExpectations(s.T())
 		})

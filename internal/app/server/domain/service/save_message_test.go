@@ -36,7 +36,7 @@ func (s *SaveMessageSuite) TestNewSaver() {
 				repository: new(mocks.Repository),
 				config:     new(config),
 			},
-			want: &SaverImpl{
+			want: &saver{
 				repository: new(mocks.Repository),
 				config:     new(config),
 			},
@@ -220,13 +220,13 @@ func (s *SaveMessageSuite) TestSaverImpl_Execute() {
 		s.Run(tt.name, func() {
 			tt.mock(tt.fields.repository)
 
-			r := &SaverImpl{
+			r := &saver{
 				repository: tt.fields.repository,
 				config:     tt.fields.config,
 			}
 
-			err := r.Execute(tt.args.ctx, tt.args.message)
-			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
+			err := r.Save(tt.args.ctx, tt.args.message)
+			s.Assert().True((err != nil) == tt.wantErr, "Save() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.repository.AssertExpectations(s.T())
 		})

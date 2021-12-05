@@ -32,7 +32,7 @@ func (s *FlusherSuite) TestNewFlusher() {
 			args: args{
 				repository: new(mocks.Repository),
 			},
-			want: &FlusherImpl{
+			want: &flusher{
 				repository: new(mocks.Repository),
 			},
 		},
@@ -45,7 +45,7 @@ func (s *FlusherSuite) TestNewFlusher() {
 	}
 }
 
-func (s *FlusherSuite) TestFlusherImpl_Execute() {
+func (s *FlusherSuite) TestFlusher_Execute() {
 	type fields struct {
 		repository *mocks.Repository
 	}
@@ -91,11 +91,11 @@ func (s *FlusherSuite) TestFlusherImpl_Execute() {
 
 			tt.mock(tt.fields.repository)
 
-			r := &FlusherImpl{
+			r := &flusher{
 				repository: tt.fields.repository,
 			}
 
-			err := r.Execute(tt.args.parentCtx)
+			err := r.Flush(tt.args.parentCtx)
 			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.repository.AssertExpectations(s.T())

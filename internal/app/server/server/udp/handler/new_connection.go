@@ -36,7 +36,7 @@ func (r *Server) isNewConnection(remote net.Addr) bool {
 func (r *Server) sendOldMessages(parentCtx context.Context, remote net.Addr, conn net.PacketConn) error {
 	log.Println("sending old messages")
 
-	messages, err := r.messageRecover.Execute(parentCtx)
+	messages, err := r.messageRecover.Recover(parentCtx)
 	if err != nil {
 		return err
 	}

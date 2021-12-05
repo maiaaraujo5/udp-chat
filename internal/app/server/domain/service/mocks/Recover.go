@@ -14,8 +14,8 @@ type Recover struct {
 	mock.Mock
 }
 
-// Execute provides a mock function with given fields: ctx
-func (_m *Recover) Execute(ctx context.Context) ([]model.Message, error) {
+// Recover provides a mock function with given fields: ctx
+func (_m *Recover) Recover(ctx context.Context) ([]model.Message, error) {
 	ret := _m.Called(ctx)
 
 	var r0 []model.Message

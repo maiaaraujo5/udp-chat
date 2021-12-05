@@ -49,7 +49,7 @@ func (s *ServerSuite) TestServer_handleNewMessage() {
 			},
 			wantErr: false,
 			mock: func(saver *mocks.Saver) {
-				saver.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -75,7 +75,7 @@ func (s *ServerSuite) TestServer_handleNewMessage() {
 			},
 			wantErr: true,
 			mock: func(saver *mocks.Saver) {
-				saver.On("Execute", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
 			},
 		},
 	}
@@ -90,7 +90,7 @@ func (s *ServerSuite) TestServer_handleNewMessage() {
 			}
 
 			err := r.handleNewMessage(tt.args.parentCtx, tt.args.in, tt.args.remote)
-			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
+			s.Assert().True((err != nil) == tt.wantErr, "handleNewMessage() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.saveMessage.AssertExpectations(s.T())
 		})

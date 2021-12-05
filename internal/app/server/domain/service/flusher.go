@@ -7,20 +7,20 @@ import (
 )
 
 type Flusher interface {
-	Execute(parentCtx context.Context) error
+	Flush(parentCtx context.Context) error
 }
 
-type FlusherImpl struct {
+type flusher struct {
 	repository repository.Repository
 }
 
 func NewFlusher(repository repository.Repository) Flusher {
-	return &FlusherImpl{
+	return &flusher{
 		repository: repository,
 	}
 }
 
-func (r *FlusherImpl) Execute(parentCtx context.Context) error {
+func (r *flusher) Flush(parentCtx context.Context) error {
 	logger.Debug("flushing database")
 	err := r.repository.Flush(parentCtx)
 	if err != nil {

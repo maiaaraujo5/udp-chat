@@ -21,7 +21,7 @@ func (r *Server) handleDeleteMessage(parentCtx context.Context, in *in.In, remot
 		return err
 	}
 
-	err = r.deleteMessage.Execute(parentCtx, message)
+	err = r.deleteMessage.Delete(parentCtx, message)
 	if err != nil {
 		return err
 	}

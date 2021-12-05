@@ -14,8 +14,8 @@ type Saver struct {
 	mock.Mock
 }
 
-// Execute provides a mock function with given fields: ctx, message
-func (_m *Saver) Execute(ctx context.Context, message *model.Message) error {
+// Save provides a mock function with given fields: ctx, message
+func (_m *Saver) Save(ctx context.Context, message *model.Message) error {
 	ret := _m.Called(ctx, message)
 
 	var r0 error

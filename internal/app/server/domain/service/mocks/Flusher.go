@@ -13,8 +13,8 @@ type Flusher struct {
 	mock.Mock
 }
 
-// Execute provides a mock function with given fields: parentCtx
-func (_m *Flusher) Execute(parentCtx context.Context) error {
+// Flush provides a mock function with given fields: parentCtx
+func (_m *Flusher) Flush(parentCtx context.Context) error {
 	ret := _m.Called(parentCtx)
 
 	var r0 error

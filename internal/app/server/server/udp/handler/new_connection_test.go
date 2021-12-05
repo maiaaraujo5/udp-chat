@@ -49,7 +49,7 @@ func (s *ServerSuite) TestServer_handleNewConnection() {
 			},
 			wantErr: false,
 			mock: func(recover *mocks.Recover, saver *mocks.Saver) {
-				recover.On("Execute", mock.Anything).Return([]model.Message{
+				recover.On("Recover", mock.Anything).Return([]model.Message{
 					{
 						ID:      mock.Anything,
 						UserID:  mock.Anything,
@@ -57,7 +57,7 @@ func (s *ServerSuite) TestServer_handleNewConnection() {
 					},
 				}, nil).Once()
 
-				saver.On("Execute", mock.Anything, mock.Anything).Return(nil).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(nil).Once()
 			},
 		},
 		{
@@ -81,7 +81,7 @@ func (s *ServerSuite) TestServer_handleNewConnection() {
 			},
 			wantErr: true,
 			mock: func(recover *mocks.Recover, saver *mocks.Saver) {
-				recover.On("Execute", mock.Anything).Return(nil, errors.New("error to recover messages")).Once()
+				recover.On("Recover", mock.Anything).Return(nil, errors.New("error to recover messages")).Once()
 			},
 		},
 		{
@@ -105,7 +105,7 @@ func (s *ServerSuite) TestServer_handleNewConnection() {
 			},
 			wantErr: true,
 			mock: func(recover *mocks.Recover, saver *mocks.Saver) {
-				recover.On("Execute", mock.Anything).Return([]model.Message{
+				recover.On("Recover", mock.Anything).Return([]model.Message{
 					{
 						ID:      mock.Anything,
 						UserID:  mock.Anything,
@@ -113,7 +113,7 @@ func (s *ServerSuite) TestServer_handleNewConnection() {
 					},
 				}, nil).Once()
 
-				saver.On("Execute", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
+				saver.On("Save", mock.Anything, mock.Anything).Return(errors.New("error to save message")).Once()
 			},
 		},
 	}
@@ -128,7 +128,7 @@ func (s *ServerSuite) TestServer_handleNewConnection() {
 			}
 
 			err := r.handleNewConnection(tt.args.parentCtx, tt.args.in, tt.args.remote)
-			s.Assert().True((err != nil) == tt.wantErr, "Execute() error = %v, wantErr %v", err, tt.wantErr)
+			s.Assert().True((err != nil) == tt.wantErr, "handleNewConnection() error = %v, wantErr %v", err, tt.wantErr)
 
 			tt.fields.messageRecover.AssertExpectations(s.T())
 			tt.fields.saveMessage.AssertExpectations(s.T())
