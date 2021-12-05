@@ -26,4 +26,4 @@ run-server:
 		CONF=./config/server/default.yaml,config/server/development.yaml go run cmd/chat/server/main.go
 
 run-client:
-		go run cmd/chat/client/main.go
+		CONF=./config/client/development.yaml go run cmd/chat/client/main.go

@@ -1,0 +1,5 @@
+gostart:
+  udp:
+    client:
+      ip: localhost
+      port: 3000

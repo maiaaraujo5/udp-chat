@@ -1,6 +1,9 @@
 gostart:
   app:
     name: udp-chat-server
+  udp:
+    server:
+      port: 3000
 
 app:
   service:
