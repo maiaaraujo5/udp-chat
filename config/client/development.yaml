@@ -3,4 +3,4 @@ gostart:
     client:
       connect:
         ip: localhost
-        port: 3500
+        port: 3000

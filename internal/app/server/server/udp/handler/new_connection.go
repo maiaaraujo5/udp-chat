@@ -3,10 +3,11 @@ package handler
 import (
 	"context"
 	"encoding/json"
-	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
-	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/out"
 	"log"
 	"net"
+
+	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
+	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/out"
 )
 
 func (r *Server) handleNewConnection(parentCtx context.Context, in *in.In, remote net.Addr) error {

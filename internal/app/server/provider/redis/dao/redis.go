@@ -4,11 +4,12 @@ import (
 	"container/list"
 	"context"
 	"fmt"
+	"strings"
+
 	"github.com/go-redis/redis/v8"
 	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/repository"
-	"strings"
 )
 
 type Redis struct {

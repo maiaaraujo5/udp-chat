@@ -3,12 +3,13 @@ package handler
 import (
 	"context"
 	"encoding/json"
+	"net"
+
 	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/service"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/out"
-	"net"
 )
 
 type Server struct {
@@ -42,7 +43,7 @@ func (r *Server) Handle(parentCtx context.Context) error {
 			return err
 		}
 
-		req, err := r.DecodeJsonIntoModel(message, rlen)
+		req, err := r.UnmarshalJSON(message, rlen)
 		if err != nil {
 			return err
 		}
@@ -102,7 +103,7 @@ func (r *Server) broadcastMessage(message *model.Message, remote net.Addr) error
 	return nil
 }
 
-func (r *Server) DecodeJsonIntoModel(message []byte, rlen int) (*in.In, error) {
+func (r *Server) UnmarshalJSON(message []byte, rlen int) (*in.In, error) {
 	req := &in.In{}
 	err := json.Unmarshal(message[:rlen], req)
 	if err != nil {

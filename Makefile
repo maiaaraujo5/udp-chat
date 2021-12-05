@@ -7,6 +7,9 @@ unit-test-client:
 end-to-end-tests:
 		go clean -testcache && go test -tags=integration ./e2e_test...
 
+lint:
+	golangci-lint run ./... --config ./build/golangci-lint/config.yml
+
 docker-compose-run-redis:
 		cd ./build && docker-compose up -d
 

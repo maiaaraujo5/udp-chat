@@ -3,10 +3,11 @@ package handler
 import (
 	"context"
 	"fmt"
+	"net"
+
 	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/model/in"
-	"net"
 )
 
 func (r *Server) handleNewMessage(parentCtx context.Context, in *in.In, remote net.Addr) error {

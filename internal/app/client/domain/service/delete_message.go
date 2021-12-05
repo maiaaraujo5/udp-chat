@@ -2,8 +2,9 @@ package service
 
 import (
 	"errors"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 	"strings"
+
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
 )
 
 type Deleter interface {

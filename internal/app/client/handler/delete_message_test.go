@@ -30,7 +30,7 @@ func (s *ClientSuite) TestClient_handleDeleteMessage() {
 		{
 			name: "should successfully remove a message from history of messages",
 			fields: fields{
-				conn:    util.CreateUdpServer(),
+				conn:    util.CreateUDPServer(),
 				deleter: new(mocks.Deleter),
 				creator: new(mocks.Creator),
 				messages: []in.In{
@@ -79,7 +79,7 @@ func (s *ClientSuite) TestClient_handleDeleteMessage() {
 		{
 			name: "should not return error when deleter returns error and not send message to server to delete message",
 			fields: fields{
-				conn:    util.CreateUdpServer(),
+				conn:    util.CreateUDPServer(),
 				deleter: new(mocks.Deleter),
 				creator: new(mocks.Creator),
 				messages: []in.In{

@@ -2,14 +2,14 @@ package runner
 
 import (
 	"context"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler"
 	"log"
 	"net"
 
 	"github.com/maiaaraujo5/gostart/config"
 	logger "github.com/maiaaraujo5/gostart/log/instance"
 	udp "github.com/maiaaraujo5/gostart/udp/client"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/handler"
 	"go.uber.org/fx"
 )
 

@@ -4,7 +4,7 @@ import gostartconfig "github.com/maiaaraujo5/gostart/config"
 
 const root = "app.service"
 
-type config struct {
+type Config struct {
 	MaxMessagesInHistory int
 }
 
@@ -12,8 +12,8 @@ func defaultConfig() {
 	gostartconfig.AddDefault(root+".maxmessagesinhistory", 20)
 }
 
-func NewConfig() (*config, error) {
-	c := &config{}
+func NewConfig() (*Config, error) {
+	c := &Config{}
 
 	defaultConfig()
 

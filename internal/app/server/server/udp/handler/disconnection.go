@@ -3,9 +3,10 @@ package handler
 import (
 	"context"
 	"fmt"
+	"net"
+
 	"github.com/maiaaraujo5/gostart/log/logger"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/domain/model"
-	"net"
 )
 
 func (r *Server) handleDisconnection(parentCtx context.Context, remote net.Addr) error {

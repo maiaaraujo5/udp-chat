@@ -1,10 +1,11 @@
 package service
 
 import (
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
 	"math/rand"
 	"strconv"
 	"time"
+
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/out"
 )
 
 type Creator interface {
@@ -20,14 +21,14 @@ func NewCreator() Creator {
 
 func (c *creator) Create(action, message string) *out.Out {
 	return &out.Out{
-		ID:      c.generateId(),
+		ID:      c.generateID(),
 		Action:  action,
 		Message: message,
 	}
 }
 
-func (c *creator) generateId() string {
+func (c *creator) generateID() string {
 	rand.Seed(time.Now().Unix())
-	number := rand.Intn(9999)
+	number := rand.Intn(9999) //nolint
 	return strconv.Itoa(number)
 }

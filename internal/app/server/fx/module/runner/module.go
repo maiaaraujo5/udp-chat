@@ -2,12 +2,13 @@ package runner
 
 import (
 	"context"
+	"net"
+
 	"github.com/maiaaraujo5/gostart/config"
 	logger "github.com/maiaaraujo5/gostart/log/instance"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/fx/module/server"
 	"github.com/maiaaraujo5/udp-chat/internal/app/server/server/udp/handler"
 	"go.uber.org/fx"
-	"net"
 )
 
 func Run() error {

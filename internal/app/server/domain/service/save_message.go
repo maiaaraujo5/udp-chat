@@ -14,10 +14,10 @@ type Saver interface {
 
 type saver struct {
 	repository repository.Repository
-	config     *config
+	config     *Config
 }
 
-func NewSaver(repository repository.Repository, config *config) Saver {
+func NewSaver(repository repository.Repository, config *Config) Saver {
 	return &saver{
 		repository: repository,
 		config:     config,
@@ -41,12 +41,12 @@ func (r *saver) Save(ctx context.Context, message *model.Message) error {
 	logger.Debug(fmt.Sprintf("pushing new message from user %s in history", message.UserID))
 	messages.PushBack(*message)
 
-	logger.Debug(fmt.Sprintf("saving messages in repository"))
+	logger.Debug("saving messages in repository")
 	err = r.repository.SaveAll(ctx, messages)
 	if err != nil {
 		return err
 	}
 
-	logger.Info(fmt.Sprintf("new message from user %s saved sucessfully", message.UserID))
+	logger.Info(fmt.Sprintf("new message from user %s saved successfully", message.UserID))
 	return nil
 }

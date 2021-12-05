@@ -4,14 +4,15 @@ import (
 	"bufio"
 	"context"
 	"fmt"
-	in2 "github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
-	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service"
 	"log"
 	"net"
 	"os"
 	"os/exec"
 	"runtime"
 	"strings"
+
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/model/in"
+	"github.com/maiaaraujo5/udp-chat/internal/app/client/domain/service"
 )
 
 const (
@@ -26,7 +27,7 @@ type Client struct {
 	receiver service.Receiver
 	deleter  service.Deleter
 	creator  service.Creator
-	messages []in2.In
+	messages []in.In
 }
 
 func NewClient(conn *net.UDPConn, receiver service.Receiver, deleter service.Deleter, creator service.Creator) *Client {
@@ -89,11 +90,11 @@ func (r *Client) handleCommands(command, msg string) {
 func (r *Client) print() {
 	r.clearScreen()
 
-	fmt.Println(fmt.Sprintf("=========UDP CHAT========="))
-	fmt.Println(fmt.Sprintf("my user_id: %s \n", r.conn.LocalAddr().String()))
+	fmt.Println("=========UDP CHAT=========")
+	fmt.Printf("my user_id: %s \n\n", r.conn.LocalAddr().String())
 
 	for _, message := range r.messages {
-		fmt.Println(fmt.Sprintf("%s -> %s: %s", message.ID, message.UserID, message.Message))
+		fmt.Printf("%s -> %s: %s \n", message.ID, message.UserID, message.Message)
 	}
 }
 
@@ -105,5 +106,8 @@ func (r *Client) clearScreen() {
 
 	cmd := clearScreenCommands[runtime.GOOS]
 	cmd.Stdout = os.Stdout
-	cmd.Run()
+	err := cmd.Run()
+	if err != nil {
+		log.Println(err)
+	}
 }

@@ -26,8 +26,8 @@ func TestClientSuite(t *testing.T) {
 }
 
 func (s *ClientSuite) SetupSuite() {
-	s.server = util.CreateUdpServer()
-	s.client = util.CreateUdpClient()
+	s.server = util.CreateUDPServer()
+	s.client = util.CreateUDPClient()
 
 	monkey.Patch(os.Exit, func(i int) {})
 }

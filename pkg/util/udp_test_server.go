@@ -4,7 +4,7 @@ import (
 	"net"
 )
 
-func CreateUdpServer() *net.UDPConn {
+func CreateUDPServer() *net.UDPConn {
 	conn, _ := net.ListenUDP("udp", &net.UDPAddr{
 		IP:   net.ParseIP("0.0.0.0"),
 		Port: 3500,
@@ -13,7 +13,7 @@ func CreateUdpServer() *net.UDPConn {
 	return conn
 }
 
-func CreateUdpClient() *net.UDPConn {
+func CreateUDPClient() *net.UDPConn {
 	addr, _ := net.ResolveUDPAddr("udp", "0.0.0.0:3500")
 
 	conn, _ := net.DialUDP("udp", nil, addr)

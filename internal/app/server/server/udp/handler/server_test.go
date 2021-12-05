@@ -24,7 +24,7 @@ func TestServerSuite(t *testing.T) {
 }
 
 func (s *ServerSuite) SetupSuite() {
-	s.conn = util.CreateUdpServer()
+	s.conn = util.CreateUDPServer()
 }
 
 func (s *ServerSuite) TearDownSuite() {
