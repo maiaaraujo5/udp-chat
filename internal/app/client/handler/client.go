@@ -102,6 +102,7 @@ func (r *Client) clearScreen() {
 	clearScreenCommands := map[string]*exec.Cmd{
 		"linux":   exec.Command("clear"),
 		"windows": exec.Command("cmd", "/c", "cls"),
+		"darwin":  exec.Command("clear"),
 	}
 
 	cmd := clearScreenCommands[runtime.GOOS]
