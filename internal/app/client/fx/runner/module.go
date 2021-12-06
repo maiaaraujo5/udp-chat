@@ -2,7 +2,6 @@ package runner
 
 import (
 	"context"
-	"log"
 	"net"
 
 	"github.com/maiaaraujo5/gostart/config"
@@ -35,7 +34,6 @@ func handle(lifecycle fx.Lifecycle, client *handler.Client, udpConn *net.UDPConn
 				return client.Handle(ctx)
 			},
 			OnStop: func(ctx context.Context) error {
-				log.Println("TO PASSANDO AQUI")
 				return udpConn.Close()
 			},
 		},

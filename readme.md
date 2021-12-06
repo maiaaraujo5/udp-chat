@@ -20,7 +20,7 @@
 * Uses the `container/list` to bring performance to the operations like delete a message from history in server
 * Redis is not a strong dependency, if something bad happens to redis the chat would continue working.
 * The datatype store in redis is a List
-* The value store in redis is composed by {id}-{user_id}-{message}. Eg: 123-127.0.0.1-Hello!
+* The value store in redis is composed by {id}-{user_id}-{message}. Eg: 123-127.0.0.1:5315-Hello!
 
 # *How to Run The Application*
  ## Server:
